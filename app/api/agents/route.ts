@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
+import { homedir } from 'os';
 
 const OPENCLAW_CONFIG_PATH = 'C:\\Users\\chris\\.openclaw\\openclaw.json';
-const GATEWAY_URL = 'http://localhost:18789';
-const SESSIONS_DIR = 'C:\\Users\\chris\\.openclaw\\sessions';
+const AGENTS_DIR = join(homedir(), '.openclaw', 'agents');
 
 interface Agent {
   id: string;
@@ -22,43 +22,48 @@ export async function GET() {
     const configData = readFileSync(OPENCLAW_CONFIG_PATH, 'utf-8');
     const config = JSON.parse(configData);
     
-    const agents: Agent[] = config.agents.list.map((agent: any) => ({
-      id: agent.id,
-      name: agent.name || agent.id,
-      workspace: agent.workspace,
-      status: 'idle' as const,
-      lastActivity: undefined,
-      tokenCount: 0,
-      sessionId: undefined,
-    }));
+    const agents: Agent[] = config.agents.list.map((agent: any) => {
+      const agentData: Agent = {
+        id: agent.id,
+        name: agent.name || agent.id,
+        workspace: agent.workspace,
+        status: 'idle' as const,
+        lastActivity: undefined,
+        tokenCount: 0,
+        sessionId: undefined,
+      };
 
-    // Try to enhance with session data from gateway
-    try {
-      const token = config.gateway?.auth?.token || '';
-      const response = await fetch(`${GATEWAY_URL}/api/sessions`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-        signal: AbortSignal.timeout(5000),
-      });
-      
-      if (response.ok) {
-        const sessions = await response.json();
-        
-        // Update agent status from sessions
-        sessions.forEach((session: any) => {
-          const agent = agents.find(a => a.id === session.agentId);
-          if (agent) {
-            agent.status = session.status || 'active';
-            agent.lastActivity = session.lastActivity;
-            agent.tokenCount = session.tokenCount || 0;
-            agent.sessionId = session.id;
+      // Read real token data from agents directory
+      try {
+        const sessionsFile = join(AGENTS_DIR, agent.id, 'sessions', 'sessions.json');
+        if (existsSync(sessionsFile)) {
+          const sessions = JSON.parse(readFileSync(sessionsFile, 'utf-8'));
+          let totalTokens = 0;
+          let latestActivity = 0;
+          let mainSessionId: string | undefined;
+
+          for (const [key, session] of Object.entries(sessions) as [string, any][]) {
+            totalTokens += session.totalTokens || 0;
+            if (session.updatedAt && session.updatedAt > latestActivity) {
+              latestActivity = session.updatedAt;
+              mainSessionId = session.sessionId;
+            }
           }
-        });
+
+          agentData.tokenCount = totalTokens;
+          if (latestActivity > 0) {
+            agentData.lastActivity = new Date(latestActivity).toISOString();
+            // Consider "active" if updated in last 5 minutes
+            agentData.status = (Date.now() - latestActivity < 5 * 60 * 1000) ? 'active' : 'idle';
+          }
+          agentData.sessionId = mainSessionId;
+        }
+      } catch (err) {
+        console.warn(`Could not read session data for ${agent.id}:`, err);
       }
-    } catch (err) {
-      console.warn('Could not fetch session data from gateway:', err);
-    }
+
+      return agentData;
+    });
 
     return NextResponse.json(agents);
   } catch (error) {
