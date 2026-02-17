@@ -15,6 +15,7 @@ interface CronJob {
   lastRun?: string;
   nextRun?: string;
   status: string;
+  lastError?: string;
   enabled: boolean;
 }
 
@@ -100,6 +101,9 @@ export default function CronsPage() {
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
+                    {cron.status === 'error' && (
+                      <Badge variant="destructive">Error</Badge>
+                    )}
                     <Badge variant={cron.enabled ? 'success' : 'secondary'}>
                       {cron.enabled ? 'Enabled' : 'Disabled'}
                     </Badge>
@@ -115,23 +119,30 @@ export default function CronsPage() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-3">
-                  {cron.model && (
-                    <div>
-                      <span className="text-muted-foreground">Model:</span>{' '}
-                      <span className="font-mono">{cron.model}</span>
-                    </div>
-                  )}
-                  {cron.lastRun && (
-                    <div>
-                      <span className="text-muted-foreground">Last run:</span>{' '}
-                      {formatDistanceToNow(new Date(cron.lastRun), { addSuffix: true })}
-                    </div>
-                  )}
-                  {cron.nextRun && (
-                    <div>
-                      <span className="text-muted-foreground">Next run:</span>{' '}
-                      {formatDistanceToNow(new Date(cron.nextRun), { addSuffix: true })}
+                <div className="space-y-2 text-sm">
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                    {cron.model && (
+                      <div>
+                        <span className="text-muted-foreground">Model:</span>{' '}
+                        <span className="font-mono">{cron.model}</span>
+                      </div>
+                    )}
+                    {cron.lastRun && (
+                      <div>
+                        <span className="text-muted-foreground">Last run:</span>{' '}
+                        {formatDistanceToNow(new Date(cron.lastRun), { addSuffix: true })}
+                      </div>
+                    )}
+                    {cron.nextRun && (
+                      <div>
+                        <span className="text-muted-foreground">Next run:</span>{' '}
+                        {formatDistanceToNow(new Date(cron.nextRun), { addSuffix: true })}
+                      </div>
+                    )}
+                  </div>
+                  {cron.lastError && (
+                    <div className="rounded bg-destructive/10 px-3 py-2 text-destructive">
+                      ⚠️ {cron.lastError}
                     </div>
                   )}
                 </div>

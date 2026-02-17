@@ -1,28 +1,44 @@
 import { NextResponse } from 'next/server';
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 
-const OPENCLAW_CONFIG_PATH = 'C:\\Users\\chris\\.openclaw\\openclaw.json';
-const GATEWAY_URL = 'http://localhost:18789';
+const CACHE_PATH = 'C:\\Users\\chris\\.openclaw\\workspace\\tony-dashboard\\.cron-cache.json';
 
 export async function GET() {
   try {
-    const configData = readFileSync(OPENCLAW_CONFIG_PATH, 'utf-8');
-    const config = JSON.parse(configData);
-    const token = config.gateway?.auth?.token || '';
-
-    const response = await fetch(`${GATEWAY_URL}/api/crons`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-      signal: AbortSignal.timeout(5000),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Gateway returned ${response.status}`);
+    if (!existsSync(CACHE_PATH)) {
+      return NextResponse.json([]);
     }
 
-    const crons = await response.json();
-    return NextResponse.json(crons);
+    const raw = JSON.parse(readFileSync(CACHE_PATH, 'utf-8'));
+    const jobs = raw.jobs || raw;
+
+    // Transform to the shape the frontend expects
+    const transformed = jobs.map((job: any) => {
+      const schedule = job.schedule || {};
+      let scheduleStr = '';
+      if (schedule.kind === 'cron') scheduleStr = schedule.expr + (schedule.tz ? ` (${schedule.tz})` : '');
+      else if (schedule.kind === 'every') scheduleStr = `Every ${Math.round((schedule.everyMs || 0) / 60000)}m`;
+      else if (schedule.kind === 'at') scheduleStr = `Once at ${schedule.at}`;
+
+      const state = job.state || {};
+      const payload = job.payload || {};
+
+      return {
+        id: job.id,
+        name: job.name || job.id,
+        schedule: scheduleStr,
+        model: payload.model || undefined,
+        lastRun: state.lastRunAtMs ? new Date(state.lastRunAtMs).toISOString() : undefined,
+        nextRun: state.nextRunAtMs ? new Date(state.nextRunAtMs).toISOString() : undefined,
+        status: state.lastStatus || 'unknown',
+        lastError: state.lastError || undefined,
+        enabled: job.enabled !== false,
+        sessionTarget: job.sessionTarget,
+        deleteAfterRun: job.deleteAfterRun || false,
+      };
+    });
+
+    return NextResponse.json(transformed);
   } catch (error) {
     console.error('Error fetching crons:', error);
     return NextResponse.json(

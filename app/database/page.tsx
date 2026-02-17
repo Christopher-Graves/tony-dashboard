@@ -17,16 +17,21 @@ export default function DatabasePage() {
   const [schema, setSchema] = useState<TableSchema[]>([]);
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchTables = async () => {
     try {
       const response = await fetch('/api/db/tables');
-      if (response.ok) {
-        const tableList = await response.json();
-        setTables(Array.isArray(tableList) ? tableList : []);
+      const result = await response.json();
+      if (response.ok && Array.isArray(result)) {
+        setTables(result);
+        setError(null);
+      } else {
+        setError(result.error || 'Failed to load tables');
+        setTables([]);
       }
     } catch (err) {
-      console.error('Error fetching tables:', err);
+      setError('Cannot connect to database API');
     } finally {
       setLoading(false);
     }
@@ -79,7 +84,9 @@ export default function DatabasePage() {
             <CardTitle className="text-lg">Tables</CardTitle>
           </CardHeader>
           <CardContent>
-            {tables.length === 0 ? (
+            {error ? (
+              <p className="text-sm text-destructive">{error}</p>
+            ) : tables.length === 0 ? (
               <p className="text-sm text-muted-foreground">No tables found</p>
             ) : (
               <div className="space-y-1">

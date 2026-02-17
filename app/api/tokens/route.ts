@@ -1,68 +1,85 @@
 import { NextResponse } from 'next/server';
-import { readdirSync, readFileSync, statSync } from 'fs';
+import { readFileSync, readdirSync, existsSync, statSync } from 'fs';
 import { join } from 'path';
+import { homedir } from 'os';
 
-const SESSIONS_DIR = 'C:\\Users\\chris\\.openclaw\\sessions';
+// OpenClaw stores session/log data in various places.
+// Try multiple approaches to find token usage data.
+
+const OPENCLAW_DIR = join(homedir(), '.openclaw');
+const LOG_DIR = join('C:', 'tmp', 'openclaw');
 
 interface TokenUsage {
   agentId: string;
   agentName: string;
   totalTokens: number;
-  sessions: Array<{
-    sessionId: string;
-    tokens: number;
-    lastActivity: string;
-  }>;
+  sessions: Array<{ sessionId: string; tokens: number; lastActivity: string }>;
+}
+
+function getAgentNames(): Record<string, string> {
+  try {
+    const config = JSON.parse(readFileSync(join(OPENCLAW_DIR, 'openclaw.json'), 'utf-8'));
+    const map: Record<string, string> = {};
+    for (const agent of config.agents?.list || []) {
+      map[agent.id] = agent.name || agent.id;
+    }
+    return map;
+  } catch {
+    return {};
+  }
 }
 
 export async function GET() {
   try {
-    const tokenUsage: Record<string, TokenUsage> = {};
+    const names = getAgentNames();
+    
+    // Try to read from workspace session data or logs
+    const usage: TokenUsage[] = Object.entries(names).map(([id, name]) => ({
+      agentId: id,
+      agentName: name,
+      totalTokens: 0,
+      sessions: [],
+    }));
 
-    // Read all session directories
-    try {
-      const agents = readdirSync(SESSIONS_DIR);
+    // Check for any session directories
+    const possibleSessionDirs = [
+      join(OPENCLAW_DIR, 'sessions'),
+      join(OPENCLAW_DIR, 'data', 'sessions'),
+    ];
+
+    for (const dir of possibleSessionDirs) {
+      if (!existsSync(dir)) continue;
       
-      for (const agentId of agents) {
-        const agentDir = join(SESSIONS_DIR, agentId);
-        const stat = statSync(agentDir);
-        
-        if (!stat.isDirectory()) continue;
+      try {
+        const agents = readdirSync(dir);
+        for (const agentId of agents) {
+          const agentDir = join(dir, agentId);
+          if (!statSync(agentDir).isDirectory()) continue;
 
-        tokenUsage[agentId] = {
-          agentId,
-          agentName: agentId,
-          totalTokens: 0,
-          sessions: [],
-        };
+          let entry = usage.find(u => u.agentId === agentId);
+          if (!entry) {
+            entry = { agentId, agentName: names[agentId] || agentId, totalTokens: 0, sessions: [] };
+            usage.push(entry);
+          }
 
-        // Read session files
-        const sessions = readdirSync(agentDir);
-        for (const sessionFile of sessions) {
-          if (!sessionFile.endsWith('.json')) continue;
-          
-          try {
-            const sessionPath = join(agentDir, sessionFile);
-            const sessionData = readFileSync(sessionPath, 'utf-8');
-            const session = JSON.parse(sessionData);
-            
-            const tokens = session.usage?.totalTokens || 0;
-            tokenUsage[agentId].totalTokens += tokens;
-            tokenUsage[agentId].sessions.push({
-              sessionId: sessionFile.replace('.json', ''),
-              tokens,
-              lastActivity: session.lastActivity || session.createdAt,
-            });
-          } catch (err) {
-            console.warn(`Error reading session ${sessionFile}:`, err);
+          const sessions = readdirSync(agentDir).filter(f => f.endsWith('.json'));
+          for (const sf of sessions) {
+            try {
+              const data = JSON.parse(readFileSync(join(agentDir, sf), 'utf-8'));
+              const tokens = data.usage?.totalTokens || data.tokenCount || 0;
+              entry.totalTokens += tokens;
+              entry.sessions.push({
+                sessionId: sf.replace('.json', ''),
+                tokens,
+                lastActivity: data.lastActivity || data.updatedAt || '',
+              });
+            } catch {}
           }
         }
-      }
-    } catch (err) {
-      console.warn('Error reading sessions directory:', err);
+      } catch {}
     }
 
-    return NextResponse.json(Object.values(tokenUsage));
+    return NextResponse.json(usage);
   } catch (error) {
     console.error('Error fetching token usage:', error);
     return NextResponse.json(
