@@ -1,24 +1,34 @@
 import { NextResponse } from 'next/server';
-import { readFileSync, readdirSync, existsSync, statSync } from 'fs';
+import { readFileSync, readdirSync, existsSync } from 'fs';
 import { join } from 'path';
 import { homedir } from 'os';
 
-// OpenClaw stores session/log data in various places.
-// Try multiple approaches to find token usage data.
+const AGENTS_DIR = join(homedir(), '.openclaw', 'agents');
+const CONFIG_PATH = join(homedir(), '.openclaw', 'openclaw.json');
 
-const OPENCLAW_DIR = join(homedir(), '.openclaw');
-const LOG_DIR = join('C:', 'tmp', 'openclaw');
+interface SessionInfo {
+  sessionId: string;
+  key: string;
+  inputTokens: number;
+  outputTokens: number;
+  totalTokens: number;
+  model?: string;
+  lastActivity: string;
+}
 
-interface TokenUsage {
+interface AgentUsage {
   agentId: string;
   agentName: string;
+  inputTokens: number;
+  outputTokens: number;
   totalTokens: number;
-  sessions: Array<{ sessionId: string; tokens: number; lastActivity: string }>;
+  sessionCount: number;
+  sessions: SessionInfo[];
 }
 
 function getAgentNames(): Record<string, string> {
   try {
-    const config = JSON.parse(readFileSync(join(OPENCLAW_DIR, 'openclaw.json'), 'utf-8'));
+    const config = JSON.parse(readFileSync(CONFIG_PATH, 'utf-8'));
     const map: Record<string, string> = {};
     for (const agent of config.agents?.list || []) {
       map[agent.id] = agent.name || agent.id;
@@ -32,52 +42,65 @@ function getAgentNames(): Record<string, string> {
 export async function GET() {
   try {
     const names = getAgentNames();
-    
-    // Try to read from workspace session data or logs
-    const usage: TokenUsage[] = Object.entries(names).map(([id, name]) => ({
-      agentId: id,
-      agentName: name,
-      totalTokens: 0,
-      sessions: [],
-    }));
+    const usage: AgentUsage[] = [];
 
-    // Check for any session directories
-    const possibleSessionDirs = [
-      join(OPENCLAW_DIR, 'sessions'),
-      join(OPENCLAW_DIR, 'data', 'sessions'),
-    ];
+    if (!existsSync(AGENTS_DIR)) {
+      return NextResponse.json([]);
+    }
 
-    for (const dir of possibleSessionDirs) {
-      if (!existsSync(dir)) continue;
-      
+    const agentDirs = readdirSync(AGENTS_DIR);
+
+    for (const agentId of agentDirs) {
+      const sessionsFile = join(AGENTS_DIR, agentId, 'sessions', 'sessions.json');
+      if (!existsSync(sessionsFile)) continue;
+
       try {
-        const agents = readdirSync(dir);
-        for (const agentId of agents) {
-          const agentDir = join(dir, agentId);
-          if (!statSync(agentDir).isDirectory()) continue;
+        const data = JSON.parse(readFileSync(sessionsFile, 'utf-8'));
+        const agent: AgentUsage = {
+          agentId,
+          agentName: names[agentId] || agentId,
+          inputTokens: 0,
+          outputTokens: 0,
+          totalTokens: 0,
+          sessionCount: 0,
+          sessions: [],
+        };
 
-          let entry = usage.find(u => u.agentId === agentId);
-          if (!entry) {
-            entry = { agentId, agentName: names[agentId] || agentId, totalTokens: 0, sessions: [] };
-            usage.push(entry);
-          }
+        for (const [key, session] of Object.entries(data) as [string, any][]) {
+          const input = session.inputTokens || 0;
+          const output = session.outputTokens || 0;
+          const total = session.totalTokens || (input + output);
 
-          const sessions = readdirSync(agentDir).filter(f => f.endsWith('.json'));
-          for (const sf of sessions) {
-            try {
-              const data = JSON.parse(readFileSync(join(agentDir, sf), 'utf-8'));
-              const tokens = data.usage?.totalTokens || data.tokenCount || 0;
-              entry.totalTokens += tokens;
-              entry.sessions.push({
-                sessionId: sf.replace('.json', ''),
-                tokens,
-                lastActivity: data.lastActivity || data.updatedAt || '',
-              });
-            } catch {}
+          agent.inputTokens += input;
+          agent.outputTokens += output;
+          agent.totalTokens += total;
+          agent.sessionCount++;
+
+          // Only include sessions with actual token usage
+          if (total > 0) {
+            agent.sessions.push({
+              sessionId: session.sessionId || key,
+              key,
+              inputTokens: input,
+              outputTokens: output,
+              totalTokens: total,
+              model: session.model,
+              lastActivity: session.updatedAt ? new Date(session.updatedAt).toISOString() : '',
+            });
           }
         }
-      } catch {}
+
+        // Sort sessions by tokens descending
+        agent.sessions.sort((a, b) => b.totalTokens - a.totalTokens);
+
+        usage.push(agent);
+      } catch (err) {
+        console.warn(`Error reading sessions for ${agentId}:`, err);
+      }
     }
+
+    // Sort agents by total tokens descending
+    usage.sort((a, b) => b.totalTokens - a.totalTokens);
 
     return NextResponse.json(usage);
   } catch (error) {
