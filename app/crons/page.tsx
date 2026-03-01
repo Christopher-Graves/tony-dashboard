@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Play } from 'lucide-react';
+import { RefreshCw, Terminal } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
 interface CronJob {
@@ -22,8 +22,8 @@ interface CronJob {
 export default function CronsPage() {
   const [crons, setCrons] = useState<CronJob[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [triggering, setTriggering] = useState<string | null>(null);
 
   const fetchCrons = async () => {
     try {
@@ -40,18 +40,15 @@ export default function CronsPage() {
     }
   };
 
-  const triggerCron = async (id: string) => {
-    setTriggering(id);
+  const refreshCache = async () => {
+    setRefreshing(true);
     try {
-      const response = await fetch(`/api/crons/${id}/run`, {
-        method: 'POST',
-      });
-      if (!response.ok) throw new Error('Failed to trigger cron');
+      // Trigger a cache refresh by calling the refresh endpoint
+      // The refresh endpoint accepts POSTed job data from Tony or scripts
+      // For now, just re-fetch the existing cache
       await fetchCrons();
-    } catch (err) {
-      alert(err instanceof Error ? err.message : 'Failed to trigger cron');
     } finally {
-      setTriggering(null);
+      setRefreshing(false);
     }
   };
 
@@ -70,10 +67,31 @@ export default function CronsPage() {
   }
 
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Cron Jobs</h1>
-        <p className="text-muted-foreground">Scheduled tasks and automations</p>
+    <div className="p-4 md:p-6 lg:p-8">
+      <div className="mb-6 md:mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Cron Jobs</h1>
+          <p className="text-sm md:text-base text-muted-foreground">Scheduled tasks and automations</p>
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={refreshCache}
+          disabled={refreshing}
+        >
+          <RefreshCw className={`mr-2 h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+          {refreshing ? 'Refreshing...' : 'Refresh'}
+        </Button>
+      </div>
+
+      <div className="mb-4 flex items-start gap-2 rounded-lg border border-border bg-card p-4 text-sm text-muted-foreground">
+        <Terminal className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+        <span>
+          To manually trigger a cron job, use the OpenClaw CLI:{' '}
+          <code className="rounded bg-secondary px-1.5 py-0.5 font-mono text-xs text-foreground">
+            openclaw cron run &lt;id&gt;
+          </code>
+        </span>
       </div>
 
       {error && (
@@ -107,14 +125,6 @@ export default function CronsPage() {
                     <Badge variant={cron.enabled ? 'success' : 'secondary'}>
                       {cron.enabled ? 'Enabled' : 'Disabled'}
                     </Badge>
-                    <Button
-                      size="sm"
-                      onClick={() => triggerCron(cron.id)}
-                      disabled={triggering === cron.id || !cron.enabled}
-                    >
-                      <Play className="mr-1 h-3 w-3" />
-                      {triggering === cron.id ? 'Running...' : 'Run'}
-                    </Button>
                   </div>
                 </div>
               </CardHeader>

@@ -1,1 +1,336 @@
-{"updatedAt":1771298993358,"jobs":[{"id":"cf4eac6f","name":"Sunday Finance Review","enabled":false,"schedule":{"kind":"cron","expr":"0 13 * * 0","tz":"America/New_York"},"payload":{"kind":"agentTurn"},"state":{}},{"id":"b744eca2","name":"Check thumbnail pipeline progress","enabled":false,"schedule":{"kind":"every","everyMs":1800000},"payload":{"kind":"systemEvent"},"state":{"lastRunAtMs":1771110705974,"lastStatus":"ok"}},{"id":"808a5f06","name":"Promise Enforcer (every 15 min)","enabled":true,"schedule":{"kind":"cron","expr":"*/30 * * * *","tz":"America/New_York"},"payload":{"kind":"agentTurn","model":"ollama/qwen3:8b"},"state":{"nextRunAtMs":1771299000000,"lastRunAtMs":1771298527700,"lastStatus":"ok","lastDurationMs":8331}},{"id":"9b15fcc9","name":"Reminder Checker (every 5 min)","enabled":true,"schedule":{"kind":"cron","expr":"*/30 * * * *","tz":"America/New_York"},"payload":{"kind":"agentTurn","model":"ollama/qwen3:8b"},"state":{"nextRunAtMs":1771299000000,"lastRunAtMs":1771298594637,"lastStatus":"ok","lastDurationMs":8303}},{"id":"508fbd03","name":"X Creator Monitor (Midnight)","enabled":true,"schedule":{"kind":"cron","expr":"0 0 * * *","tz":"America/New_York"},"payload":{"kind":"agentTurn","model":"ollama/qwen3:30b"},"state":{"nextRunAtMs":1771304400000,"lastRunAtMs":1771218000016,"lastStatus":"ok"}},{"id":"a4a49c74","name":"Daily Full Backup (3 AM)","enabled":true,"schedule":{"kind":"cron","expr":"0 3 * * *","tz":"America/New_York"},"payload":{"kind":"agentTurn","model":"ollama/qwen3:30b"},"state":{"nextRunAtMs":1771315200000,"lastRunAtMs":1771228800015,"lastStatus":"ok"}},{"id":"165b1afa","name":"Thumbnail Pipeline Daily Collection","enabled":true,"schedule":{"kind":"cron","expr":"30 3 * * *","tz":"America/New_York"},"payload":{"kind":"agentTurn"},"state":{"nextRunAtMs":1771317000000,"lastRunAtMs":1771230612015,"lastStatus":"ok"}},{"id":"1bcb51fd","name":"Morning Brief Pipeline","enabled":true,"schedule":{"kind":"cron","expr":"30 4 * * *","tz":"America/New_York"},"payload":{"kind":"agentTurn","model":"anthropic/claude-sonnet-4-5"},"state":{"nextRunAtMs":1771320600000,"lastRunAtMs":1771234200013,"lastStatus":"ok"}},{"id":"fac31572","name":"X Creator Monitor (6AM)","enabled":true,"schedule":{"kind":"cron","expr":"0 6 * * *","tz":"America/New_York"},"payload":{"kind":"agentTurn","model":"ollama/qwen3:30b"},"state":{"nextRunAtMs":1771326000000,"lastRunAtMs":1771239600014,"lastStatus":"ok"}},{"id":"1986a089","name":"Ninja Body Daily Quest","enabled":true,"schedule":{"kind":"cron","expr":"0 7 * * *","tz":"America/New_York"},"payload":{"kind":"agentTurn","model":"anthropic/claude-sonnet-4-5"},"state":{"nextRunAtMs":1771329600000}},{"id":"4ee024fe","name":"X Creator Recon (4x daily)","enabled":true,"schedule":{"kind":"cron","expr":"0 8,12,17,21 * * *","tz":"America/New_York"},"payload":{"kind":"agentTurn","model":"ollama/qwen3:30b"},"state":{"nextRunAtMs":1771333200000,"lastRunAtMs":1771293600035,"lastStatus":"error","lastError":"model not allowed: ollama/qwen3:30b"}},{"id":"a3624e1c","name":"Identity Exercise Step 2","enabled":true,"schedule":{"kind":"at","at":"2026-02-17T14:00:00.000Z"},"payload":{"kind":"agentTurn"},"state":{"nextRunAtMs":1771336800000}},{"id":"6b39eeef","name":"Quick Backup (Every 6h)","enabled":true,"schedule":{"kind":"cron","expr":"0 9,15,21 * * *","tz":"America/New_York"},"payload":{"kind":"agentTurn","model":"ollama/qwen3:30b"},"state":{"nextRunAtMs":1771336800000,"lastRunAtMs":1771293600033,"lastStatus":"error","lastError":"model not allowed: ollama/qwen3:30b"}},{"id":"2b4caf6e","name":"Token Usage Report","enabled":true,"schedule":{"kind":"cron","expr":"0 9 * * *","tz":"America/New_York"},"payload":{"kind":"agentTurn","model":"ollama/qwen3:30b"},"state":{"nextRunAtMs":1771336800000,"lastRunAtMs":1771250422797,"lastStatus":"ok"}},{"id":"d949fafb","name":"X Morning Digest (Topic 20)","enabled":true,"schedule":{"kind":"cron","expr":"0 10 * * *","tz":"America/New_York"},"payload":{"kind":"agentTurn","model":"anthropic/claude-sonnet-4-5"},"state":{"nextRunAtMs":1771340400000,"lastRunAtMs":1771254032071,"lastStatus":"ok"}},{"id":"d6e648ea","name":"Creator Habits Mid-Day Check","enabled":true,"schedule":{"kind":"cron","expr":"0 12 * * *","tz":"America/New_York"},"payload":{"kind":"agentTurn","model":"ollama/qwen3:30b"},"state":{"nextRunAtMs":1771347600000,"lastRunAtMs":1771261200015,"lastStatus":"ok"}},{"id":"19fbb289","name":"X Creator Monitor (12PM)","enabled":true,"schedule":{"kind":"cron","expr":"0 12 * * *","tz":"America/New_York"},"payload":{"kind":"agentTurn","model":"ollama/qwen3:30b"},"state":{"nextRunAtMs":1771347600000,"lastRunAtMs":1771261606503,"lastStatus":"ok"}},{"id":"9315426c","name":"X Midday Comment Opportunities","enabled":true,"schedule":{"kind":"cron","expr":"0 13 * * *","tz":"America/New_York"},"payload":{"kind":"agentTurn","model":"anthropic/claude-sonnet-4-5"},"state":{"nextRunAtMs":1771351200000,"lastRunAtMs":1771264830911,"lastStatus":"ok"}},{"id":"95cf9fb6","name":"X Afternoon Comment Opportunities","enabled":true,"schedule":{"kind":"cron","expr":"0 16 * * *","tz":"America/New_York"},"payload":{"kind":"agentTurn","model":"anthropic/claude-sonnet-4-5"},"state":{"nextRunAtMs":1771362000000,"lastRunAtMs":1771275622551,"lastStatus":"ok"}},{"id":"66e5dc7a","name":"X Creator Monitor (6PM)","enabled":true,"schedule":{"kind":"cron","expr":"0 18 * * *","tz":"America/New_York"},"payload":{"kind":"agentTurn","model":"ollama/qwen3:30b"},"state":{"nextRunAtMs":1771369200000,"lastRunAtMs":1771282800024,"lastStatus":"ok"}},{"id":"8b4f10f5","name":"X Daily Digest (Topic 20)","enabled":true,"schedule":{"kind":"cron","expr":"0 18 * * *","tz":"America/New_York"},"payload":{"kind":"agentTurn","model":"anthropic/claude-sonnet-4-5"},"state":{"nextRunAtMs":1771369200000,"lastRunAtMs":1771282822631,"lastStatus":"ok"}},{"id":"aaf72c11","name":"Brain Health Report","enabled":true,"schedule":{"kind":"cron","expr":"0 21 * * *","tz":"America/New_York"},"payload":{"kind":"agentTurn","model":"ollama/qwen3:30b"},"state":{"nextRunAtMs":1771380000000,"lastRunAtMs":1771298919714,"lastStatus":"error","lastError":"Slack bot token missing for account default"}},{"id":"182e42c3","name":"SuperBetter Evening Check-in","enabled":true,"schedule":{"kind":"cron","expr":"0 21 * * *","tz":"America/New_York"},"payload":{"kind":"agentTurn","model":"anthropic/claude-sonnet-4-5"},"state":{"nextRunAtMs":1771380000000,"lastRunAtMs":1771293600043,"lastStatus":"ok"}},{"id":"201500bb","name":"Ninja Body Evening Check-in","enabled":true,"schedule":{"kind":"cron","expr":"0 21 * * *","tz":"America/New_York"},"payload":{"kind":"agentTurn"},"state":{"nextRunAtMs":1771380000000,"lastRunAtMs":1771293629993,"lastStatus":"ok"}},{"id":"541f2ad6","name":"Switch back to Opus","enabled":true,"schedule":{"kind":"at","at":"2026-02-18T13:00:00.000Z"},"payload":{"kind":"systemEvent"},"state":{"nextRunAtMs":1771419600000}},{"id":"7404e102","name":"CJS Wednesday Mid-Week Nudge","enabled":true,"schedule":{"kind":"cron","expr":"0 12 * * 3","tz":"America/New_York"},"payload":{"kind":"agentTurn","model":"ollama/qwen3:30b"},"state":{"nextRunAtMs":1771434000000}},{"id":"af56bd69","name":"X Phase 2 Transition Reminder","enabled":true,"schedule":{"kind":"at","at":"2026-02-19T14:00:00.000Z"},"payload":{"kind":"agentTurn","model":"sonnet"},"state":{"nextRunAtMs":1771509600000}},{"id":"cd97b743","name":"Sunday Financial Review","enabled":true,"schedule":{"kind":"cron","expr":"0 10 * * 0","tz":"America/New_York"},"payload":{"kind":"agentTurn","model":"ollama/qwen3:30b"},"state":{"nextRunAtMs":1771772400000,"lastRunAtMs":1771167600012,"lastStatus":"ok"}},{"id":"fc35c874","name":"Weekly Goal Scorecard","enabled":true,"schedule":{"kind":"cron","expr":"0 21 * * 0","tz":"America/New_York"},"payload":{"kind":"agentTurn","model":"anthropic/claude-sonnet-4-5"},"state":{"nextRunAtMs":1771812000000,"lastRunAtMs":1771207236436,"lastStatus":"ok"}},{"id":"7afb2848","name":"CJS Monday Cadence Check","enabled":true,"schedule":{"kind":"cron","expr":"0 9 * * 1","tz":"America/New_York"},"payload":{"kind":"agentTurn","model":"ollama/qwen3:30b"},"state":{"nextRunAtMs":1771855200000,"lastRunAtMs":1771250462295,"lastStatus":"ok"}},{"id":"6e10440e","name":"CJS Monthly Milestone Review","enabled":true,"schedule":{"kind":"cron","expr":"0 10 1 * *","tz":"America/New_York"},"payload":{"kind":"agentTurn","model":"ollama/qwen3:30b"},"state":{"nextRunAtMs":1772377200000}},{"id":"75f9a1e2","name":"React Miami 2026 Volunteer Reminder","enabled":true,"schedule":{"kind":"at","at":"2026-03-23T13:00:00.000Z"},"payload":{"kind":"agentTurn","model":"anthropic/claude-sonnet-4-5"},"state":{"nextRunAtMs":1774270800000}}]}
+{
+  "updatedAt": 1772368599856,
+  "jobs": [
+    {
+      "id": "0ffe84ff-d117-4f79-a135-ee96e45deff8",
+      "name": "Ideas Channel Auto-Ingest",
+      "enabled": true,
+      "createdAtMs": 1772301109084,
+      "updatedAtMs": 1772368214413,
+      "schedule": {
+        "kind": "cron",
+        "expr": "*/15 6-23 * * *",
+        "tz": "America/New_York"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "AUTO-INGEST #ideas channel. Read last 15min of messages from C0AF62M36TV (message tool: action=read, channel=slack, channelId=C0AF62M36TV, limit=10). For each message: if it has a URL, send to Ingest API (exec: curl -s -X POST http://192.168.4.51:8398/ingest -H Content-Type:application/json with url and sync=true). If text-only, store in brain (exec: curl to http://192.168.4.51:8400/api/claudia/add with X-API-Key:claudia header, category=ideas). Skip duplicates (search brain first). Log results to workspace\\memory\\ideas-ingest-log.md. If nothing new, reply HEARTBEAT_OK.",
+        "model": "sonnet",
+        "timeoutSeconds": 180
+      },
+      "delivery": {
+        "mode": "none",
+        "channel": "last"
+      },
+      "state": {
+        "nextRunAtMs": 1772369100000,
+        "lastRunAtMs": 1772368200027,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "lastDurationMs": 14386,
+        "lastDelivered": false,
+        "lastDeliveryStatus": "not-delivered",
+        "consecutiveErrors": 0
+      }
+    },
+    {
+      "id": "23c24b37-b37c-403a-b75c-8e8d6a3b77d5",
+      "name": "SMB Share Watchdog",
+      "enabled": true,
+      "createdAtMs": 1771947674782,
+      "updatedAtMs": 1772365773769,
+      "schedule": {
+        "kind": "every",
+        "everyMs": 300000,
+        "anchorMs": 1771947674782
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Run the SMB reconnect script silently: powershell -ExecutionPolicy Bypass -File C:\\Users\\chris\\.openclaw\\workspace\\scripts\\reconnect-smb.ps1. If any shares were reconnected, post a brief note to #tony-hq (C0AF5T5CE2F). If all shares are already connected, reply with HEARTBEAT_OK.",
+        "model": "sonnet",
+        "timeoutSeconds": 60
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "last"
+      },
+      "state": {
+        "lastRunAtMs": 1772365741318,
+        "lastRunStatus": "error",
+        "lastStatus": "error",
+        "lastDurationMs": 32451,
+        "lastDeliveryStatus": "delivered",
+        "consecutiveErrors": 17,
+        "nextRunAtMs": 1772369373769,
+        "lastDelivered": true,
+        "lastError": "⚠️ 📱 Nodes: `powershell, -ExecutionPolicy, Bypass…` failed"
+      }
+    },
+    {
+      "id": "b9621ce1-71d7-4038-8d08-c62586ab0dae",
+      "agentId": "tony",
+      "name": "healthcheck:security-audit",
+      "enabled": true,
+      "createdAtMs": 1771947877103,
+      "updatedAtMs": 1772299037886,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 8 */2 * *",
+        "tz": "America/New_York"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Run a security audit: execute 'openclaw security audit --deep' and check for any new listening ports on 0.0.0.0. Post findings to #engineering channel. If everything is clean, reply HEARTBEAT_OK.",
+        "timeoutSeconds": 120
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "last"
+      },
+      "state": {
+        "nextRunAtMs": 1772370000000,
+        "lastRunAtMs": 1772197200029,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "lastDurationMs": 12426,
+        "lastDelivered": false,
+        "lastDeliveryStatus": "not-delivered",
+        "consecutiveErrors": 0
+      }
+    },
+    {
+      "id": "8141fc30-0cc3-497b-a000-3ca5c04eb311",
+      "agentId": "trader",
+      "name": "trader-hourly-check",
+      "description": "Check trading service status and daily P&L",
+      "enabled": true,
+      "createdAtMs": 1772332154669,
+      "updatedAtMs": 1772368275887,
+      "schedule": {
+        "kind": "every",
+        "everyMs": 3600000,
+        "anchorMs": 1772332154669
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Run the trading service status check. Execute: cd C:\\Users\\chris\\.openclaw\\workspace-trader\\bot && python trading_service.py --status. Report the current equity, daily P&L, win rate, and open positions. If daily loss exceeds 6%, alert Chris immediately."
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "last"
+      },
+      "state": {
+        "nextRunAtMs": 1772371875887,
+        "lastRunAtMs": 1772368258216,
+        "lastRunStatus": "error",
+        "lastStatus": "error",
+        "lastDurationMs": 17671,
+        "lastDeliveryStatus": "unknown",
+        "consecutiveErrors": 10,
+        "lastError": "No delivery target resolved for channel \"slack\". Set delivery.to."
+      }
+    },
+    {
+      "id": "0a2225e2-e466-45e2-979d-c47d178eefa1",
+      "agentId": "hermes",
+      "name": "Daily Blog Post — European Therapeutics",
+      "enabled": true,
+      "createdAtMs": 1771529419254,
+      "updatedAtMs": 1772290011649,
+      "schedule": {
+        "kind": "cron",
+        "expr": "45 9 * * *",
+        "tz": "America/New_York"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "model": "anthropic/claude-sonnet-4-5",
+        "message": "DAILY BLOG POST — European Therapeutics (Carmen's massage business)\n\nYou are generating today's blog post for blog.lmt4life.com.\n\n**STEP 1: Pick today's topic**\nRead C:\\Users\\chris\\.openclaw\\workspace\\massage-blogger\\CONTENT-CALENDAR.md and find today's scheduled post. If today doesn't have one scheduled, pick the NEXT unwritten post from the calendar. If the calendar is exhausted, pick a topic from BLOG-STRATEGY.md content pillars that hasn't been covered yet (check published-topics.json for what's already done).\n\n**STEP 2: Check for duplicates**\nRead C:\\Users\\chris\\.openclaw\\workspace\\massage-blogger\\published-topics.json. Make sure you're not duplicating an existing topic.\n\n**STEP 3: Generate the post**\nRun: python C:\\Users\\chris\\.openclaw\\workspace\\tony-tools\\tools\\content\\blog.py \"[TOPIC]\" --tags \"[APPROPRIATE TAGS]\"\nThe script uses Ollama/Qwen3 30B on 192.168.4.51:11434 to generate, then commits and pushes to GitHub (auto-deploys via Cloudflare Pages).\n\nIf Ollama is down or the script fails, report the error to Slack channel C0AF6B4FVMZ via message tool (action=send, channel=slack, target=C0AF6B4FVMZ) and stop.\n\n**STEP 4: Update tracking**\nRead the published-topics.json file, add the new post entry (date, slug, title, keyword, pillar), and write it back.\n\n**STEP 5: Report**\nSend a brief confirmation to Slack channel C0AF6B4FVMZ via message tool (action=send, channel=slack, target=C0AF6B4FVMZ) with: post title, target keyword, and link.\n\nIf everything works, reply NO_REPLY after sending the Slack message.",
+        "timeoutSeconds": 600
+      },
+      "delivery": {
+        "mode": "none"
+      },
+      "state": {
+        "lastRunAtMs": 1772289900029,
+        "lastStatus": "ok",
+        "lastDurationMs": 111620,
+        "nextRunAtMs": 1772376300000,
+        "lastRunStatus": "ok",
+        "lastDelivered": false,
+        "lastDeliveryStatus": "not-delivered",
+        "consecutiveErrors": 0
+      }
+    },
+    {
+      "id": "67bb83ba-0ab1-4fba-a215-af26a67e178a",
+      "name": "palmtech-warmup",
+      "description": "Send 5 daily warmup emails from tony@palmtechweb.com",
+      "enabled": true,
+      "createdAtMs": 1772072459411,
+      "updatedAtMs": 1772290810694,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 10 * * *",
+        "tz": "America/New_York"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Run this command: python C:/Users/chris/.openclaw/workspace/local-web-biz/scripts/warmup-cron.py — report the results. If all 5 sent OK, reply HEARTBEAT_OK. If any failed, report failures.",
+        "model": "sonnet",
+        "timeoutSeconds": 60
+      },
+      "delivery": {
+        "mode": "none",
+        "channel": "last"
+      },
+      "state": {
+        "nextRunAtMs": 1772377200000,
+        "lastRunAtMs": 1772290800012,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "lastDurationMs": 10682,
+        "lastDelivered": false,
+        "lastDeliveryStatus": "not-delivered",
+        "consecutiveErrors": 0
+      }
+    },
+    {
+      "id": "49b37acc-fe8f-4fa0-a0f7-c44475c04d2a",
+      "agentId": "trader",
+      "name": "trader-daily-report",
+      "description": "End of day trading report",
+      "enabled": true,
+      "createdAtMs": 1772332161406,
+      "updatedAtMs": 1772332161406,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 17 * * *",
+        "tz": "America/New_York"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Generate the daily trading report. Execute: cd C:\\Users\\chris\\.openclaw\\workspace-trader\\bot && python trading_service.py --report today. Analyze the results and send a summary to Chris including: total trades, win rate, P&L, best/worst trade, strategy breakdown. Save the report to workspace-trader/reports/ as YYYY-MM-DD.md."
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "last"
+      },
+      "state": {
+        "nextRunAtMs": 1772402400000
+      }
+    },
+    {
+      "id": "b58b36c7-3bb6-45c7-9a44-09f4d6210f32",
+      "agentId": "trader",
+      "name": "trader-weekly-analysis",
+      "description": "Weekly strategy performance analysis",
+      "enabled": true,
+      "createdAtMs": 1772332169569,
+      "updatedAtMs": 1772332169569,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 20 * * 0",
+        "tz": "America/New_York"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Run the weekly trading analysis. Query the SQLite database at workspace-trader/bot/trades.db for all trades this week. Analyze: strategy win rates, best performing hours, P&L by pair, drawdown events. Compare to previous weeks if data exists. Recommend parameter adjustments. Update PREDICTIONS.md with scored predictions. Save to workspace-trader/reports/weekly-YYYY-MM-DD.md and send summary to Chris."
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "last"
+      },
+      "state": {
+        "nextRunAtMs": 1772413200000
+      }
+    },
+    {
+      "id": "c73b9970-8580-4637-a8e6-d5e0e3da05c4",
+      "agentId": "tony",
+      "name": "slack-memory-digest",
+      "enabled": true,
+      "createdAtMs": 1772119328000,
+      "updatedAtMs": 1772334071944,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 22 * * *",
+        "tz": "America/New_York"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "You are the Slack Memory Bridge. Your job is to read all agent channels and create a searchable digest.\n\nRead messages from the last 24 hours in each channel (use message tool with action=read, channel=slack):\n\n1. #tony-hq (channelId=C0AF5T5CE2F) — main HQ\n2. #youtube (channelId=C0AFRBACZKK) — YouTube agent\n3. #moms-business (channelId=C0AFG2EMQN8, accountId=momsbiz) — Mom's business\n4. #hermes (channelId=C0AF6B4FVMZ) — Operations\n5. #ideas (channelId=C0AF62M36TV) — Ideas drops\n\nFor each channel, extract and save:\n- Decisions made\n- Key facts (company names, prices, strategies, URLs)\n- Action items assigned\n- Important context\n\nWrite the digest to: C:\\Users\\chris\\.openclaw\\workspace\\memory\\slack-digests\\YYYY-MM-DD.md\nCreate the directory if it doesn't exist.\n\nFormat each channel section clearly with headers. Include timestamps.\nBe thorough — if Chris mentioned a company name, a price, a strategy, a tool, CAPTURE IT.\nThis digest is what makes conversations searchable across the entire system.\n\nAfter writing the file, respond with a brief summary of what was captured.",
+        "model": "sonnet",
+        "timeoutSeconds": 300
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "slack",
+        "to": "channel:C0AF5T5CE2F"
+      },
+      "state": {
+        "nextRunAtMs": 1772420400000,
+        "lastRunAtMs": 1772334000029,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "lastDurationMs": 71915,
+        "lastDeliveryStatus": "delivered",
+        "consecutiveErrors": 0,
+        "lastDelivered": true
+      }
+    },
+    {
+      "id": "8cad8f9d-b680-4eba-b0d3-aa4e35d962e8",
+      "agentId": "tony",
+      "name": "Nightly Meta-Learning Extraction",
+      "enabled": true,
+      "createdAtMs": 1772071304754,
+      "updatedAtMs": 1772337642350,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 23 * * *",
+        "tz": "America/New_York"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "## Nightly Meta-Learning Extraction (11PM ET)\n\nYou are Tony's meta-learning quality control system. Every night, you ensure that the day's work is properly documented and learnings are captured.\n\n## Your Tasks\n\n1. **Session Reconstruction Test:**\n   - Review today's daily logs across all agent workspaces (memory/2026-02-25.md)\n   - Ask: Could a fresh session tomorrow reconstruct what happened today from files alone?\n   - Check for: decisions made, why they were made, what's blocked, what's next\n   - Flag any gaps\n\n2. **Prediction Review:**\n   - Read C:\\Users\\chris\\.openclaw\\workspace\\PREDICTIONS.md\n   - Check if any predictions have outcomes that can now be filled in (based on today's work)\n   - If yes, note them for Chris to update\n\n3. **Friction Detection:**\n   - Read C:\\Users\\chris\\.openclaw\\workspace\\FRICTION.md\n   - Check if any unresolved contradictions from today need attention\n   - Look for new contradictions that should be logged\n\n4. **Regression Check:**\n   - Read C:\\Users\\chris\\.openclaw\\workspace\\REGRESSIONS.md\n   - Scan today's logs — did any named regression get repeated?\n   - If yes, this is HIGH PRIORITY\n\n## Output Rules\n\n- **ONLY post to #tony-hq if issues are found**\n- If everything is well-documented and no issues: exit silently (no message)\n- If issues found: post concise summary with specific file paths and gaps\n- Format: bullet list, actionable, no fluff\n\n## What Counts as an Issue\n\n- Major decision made but not logged to daily file\n- Prediction outcome is now known but not filled in\n- Unresolved friction that's blocking work\n- Named regression was repeated\n- Daily log is missing or empty when significant work happened\n\nBe practical. This is quality control, not perfectionism. Flag real gaps, not nitpicks.",
+        "model": "sonnet",
+        "timeoutSeconds": 300
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "last"
+      },
+      "state": {
+        "nextRunAtMs": 1772424000000,
+        "lastRunAtMs": 1772337600017,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "lastDurationMs": 42333,
+        "lastDelivered": true,
+        "lastDeliveryStatus": "delivered",
+        "consecutiveErrors": 0
+      }
+    }
+  ]
+}

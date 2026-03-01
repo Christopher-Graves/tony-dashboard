@@ -59,10 +59,10 @@ export default function ErrorsPage() {
   }
 
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Errors & Issues</h1>
-        <p className="text-muted-foreground">
+    <div className="p-4 md:p-6 lg:p-8">
+      <div className="mb-6 md:mb-8">
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Errors & Issues</h1>
+        <p className="text-sm md:text-base text-muted-foreground">
           Recent warnings and errors from gateway logs
         </p>
       </div>

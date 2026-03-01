@@ -7,7 +7,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "node --test __tests__/**/*.test.ts",
+    "test:watch": "node --test --watch __tests__/**/*.test.ts"
   },
   "author": "Christopher Graves",
   "repository": {
@@ -28,6 +30,7 @@
     "pg": "^8.18.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "react-markdown": "^10.1.0",
     "recharts": "^3.7.0",
     "tailwind-merge": "^3.4.1"
   },

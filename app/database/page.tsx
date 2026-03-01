@@ -72,13 +72,13 @@ export default function DatabasePage() {
   }
 
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Database Explorer</h1>
-        <p className="text-muted-foreground">Browse PostgreSQL tables (read-only)</p>
+    <div className="p-4 md:p-6 lg:p-8">
+      <div className="mb-6 md:mb-8">
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Database Explorer</h1>
+        <p className="text-sm md:text-base text-muted-foreground">Browse PostgreSQL tables (read-only)</p>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-4">
         <Card className="lg:col-span-1">
           <CardHeader>
             <CardTitle className="text-lg">Tables</CardTitle>
@@ -119,9 +119,9 @@ export default function DatabasePage() {
                 <CardHeader>
                   <CardTitle>Schema: {selectedTable}</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
+                <CardContent className="p-3 md:p-6">
+                  <div className="overflow-x-auto -mx-3 md:mx-0">
+                    <table className="w-full text-xs md:text-sm">
                       <thead>
                         <tr className="border-b border-border">
                           <th className="p-2 text-left">Column</th>

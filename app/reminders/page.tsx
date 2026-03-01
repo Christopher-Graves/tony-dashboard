@@ -58,10 +58,10 @@ export default function RemindersPage() {
   }
 
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Reminders</h1>
-        <p className="text-muted-foreground">Active scheduled reminders</p>
+    <div className="p-4 md:p-6 lg:p-8">
+      <div className="mb-6 md:mb-8">
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Reminders</h1>
+        <p className="text-sm md:text-base text-muted-foreground">Active scheduled reminders</p>
       </div>
 
       {error && (

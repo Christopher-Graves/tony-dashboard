@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "lastUpdated": "2026-02-21T22:28:00.000Z",
+    "updatedBy": "youtube-agent"
+  },
+  "settings": {
+    "platforms": [
+      "youtube",
+      "x",
+      "blog"
+    ],
+    "defaultPlatform": "youtube",
+    "weekStartsOn": "monday"
+  },
+  "items": []
+}

@@ -2,31 +2,25 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    // Dynamic import to avoid crash if pg isn't configured
     const { getTables } = await import('@/lib/db');
     const tables = await getTables();
     return NextResponse.json(tables);
   } catch (error: any) {
     const msg = String(error?.message || error);
     
-    // Friendly error for auth failures
-    if (msg.includes('password') || msg.includes('authentication')) {
+    if (msg.includes('Cannot find module') || msg.includes('@/lib/db')) {
       return NextResponse.json(
-        { error: 'Database authentication failed. Set PGPASSWORD in .env.local', details: msg },
-        { status: 503 }
+        { error: 'Database not configured. Create lib/db.ts with PostgreSQL connection.', tables: [] },
+        { status: 200 }
       );
+    }
+    if (msg.includes('password') || msg.includes('authentication')) {
+      return NextResponse.json({ error: 'Database authentication failed.', tables: [] }, { status: 200 });
     }
     if (msg.includes('ECONNREFUSED') || msg.includes('timeout')) {
-      return NextResponse.json(
-        { error: 'Cannot connect to PostgreSQL. Is it running?', details: msg },
-        { status: 503 }
-      );
+      return NextResponse.json({ error: 'Cannot connect to PostgreSQL.', tables: [] }, { status: 200 });
     }
 
-    console.error('Error fetching tables:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch database tables', details: msg },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Database error: ' + msg, tables: [] }, { status: 200 });
   }
 }

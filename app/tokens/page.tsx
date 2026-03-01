@@ -79,35 +79,36 @@ export default function TokensPage() {
   }
 
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Token Usage</h1>
-        <p className="text-muted-foreground">
+    <div className="p-4 md:p-6 lg:p-8">
+      <div className="mb-6 md:mb-8">
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Token Usage</h1>
+        <p className="text-sm md:text-base text-muted-foreground">
           Total: {totalTokens.toLocaleString()} tokens
           ({totalInput.toLocaleString()} in / {totalOutput.toLocaleString()} out)
         </p>
       </div>
 
-      <div className="mb-8">
+      <div className="mb-6 md:mb-8">
         <Card>
           <CardHeader>
-            <CardTitle>Token Usage by Agent</CardTitle>
+            <CardTitle className="text-base md:text-lg">Token Usage by Agent</CardTitle>
           </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
+          <CardContent className="p-3 md:p-6">
+            <ResponsiveContainer width="100%" height={250} className="md:h-[300px]">
               <BarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis dataKey="name" stroke="hsl(var(--foreground))" />
-                <YAxis stroke="hsl(var(--foreground))" />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
+                <XAxis dataKey="name" stroke="var(--color-foreground)" />
+                <YAxis stroke="var(--color-foreground)" />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: 'hsl(var(--card))',
-                    border: '1px solid hsl(var(--border))',
+                    backgroundColor: 'var(--color-card)',
+                    border: '1px solid var(--color-border)',
                     borderRadius: '8px',
+                    color: 'var(--color-foreground)',
                   }}
-                  formatter={(value: number) => [value.toLocaleString(), 'Tokens']}
+                  formatter={(value: number | undefined) => [(value ?? 0).toLocaleString(), 'Tokens']}
                 />
-                <Bar dataKey="tokens" fill="hsl(var(--primary))" />
+                <Bar dataKey="tokens" fill="var(--color-primary)" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
