@@ -3,6 +3,11 @@ import { NextRequest, NextResponse } from 'next/server';
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Exempt gateway-token from authentication (needed for client-side WebSocket setup)
+  if (pathname === '/api/gateway-token') {
+    return NextResponse.next();
+  }
+
   // Protect ALL API routes with Bearer token authentication
   if (pathname.startsWith('/api/')) {
     const authHeader = request.headers.get('authorization');
