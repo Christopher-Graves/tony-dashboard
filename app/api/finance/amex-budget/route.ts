@@ -29,27 +29,25 @@ export async function GET(request: NextRequest) {
         FROM amex_budget_progress
         ORDER BY spent DESC
       `);
-      
-      return NextResponse.json({
-        categories: result.rows.map(row => ({
-          category: row.category,
-          icon: row.icon,
-          transactionCount: parseInt(row.transaction_count),
-          spent: parseFloat(row.spent),
-          monthlyBudget: parseFloat(row.monthly_budget),
-          remaining: parseFloat(row.remaining),
-          percentUsed: parseFloat(row.percent_used),
-          status: row.status
-        }))
-      });
+
+      return NextResponse.json(result.rows.map(row => ({
+        category: row.category,
+        icon: row.icon,
+        transaction_count: parseInt(row.transaction_count),
+        spent: parseFloat(row.spent),
+        monthly_budget: parseFloat(row.monthly_budget),
+        remaining: parseFloat(row.remaining),
+        percent_used: parseFloat(row.percent_used),
+        status: row.status
+      })));
       
     } finally {
       client.release();
     }
   } catch (error) {
-    console.error('Error fetching Amex budget progress:', error);
+    console.error('Error fetching Amex budget:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch budget progress' },
+      { error: 'Failed to fetch Amex budget' },
       { status: 500 }
     );
   }

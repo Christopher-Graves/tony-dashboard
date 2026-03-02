@@ -81,27 +81,22 @@ export async function GET(request: NextRequest) {
       
       return NextResponse.json({
         summary: {
-          accountName: summary.account_name,
-          accountMask: summary.account_mask,
-          statementStart: summary.start_date,
-          statementEnd: summary.end_date,
-          transactionCount: parseInt(summary.transaction_count),
-          totalSpent: parseFloat(summary.total_spent),
-          budget: parseFloat(summary.budget),
+          account_name: summary.account_name,
+          start_date: summary.start_date,
+          end_date: summary.end_date,
+          total_spent: parseFloat(summary.total_spent),
+          budget_target: parseFloat(summary.budget),
           remaining: parseFloat(summary.remaining),
-          percentUsed: parseFloat(summary.percent_used),
-          status: summary.percent_used >= 100 ? 'OVER_BUDGET' : 
-                  summary.percent_used >= 90 ? 'WARNING' : 'OK'
+          percent_used: parseFloat(summary.percent_used)
         },
         transactions: transactionsResult.rows.map(row => ({
           id: row.id,
-          date: row.date,
           name: row.name,
-          merchantName: row.merchant_name,
+          merchant_name: row.merchant_name,
           amount: parseFloat(row.amount),
-          pending: row.pending,
+          date: row.date,
           category: row.category,
-          categoryIcon: row.category_icon
+          icon: row.category_icon
         }))
       });
       
@@ -116,4 +111,3 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-
