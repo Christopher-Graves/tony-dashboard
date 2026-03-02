@@ -1,4 +1,4 @@
-﻿/**
+/**
  * API client utility
  * Automatically adds Bearer token to all API requests
  */
@@ -16,13 +16,13 @@ export async function apiClient(endpoint: string, options: FetchOptions = {}) {
   let url = endpoint;
   if (params) {
     const queryString = new URLSearchParams(params).toString();
-    url = ${endpoint}?;
+    url = `${endpoint}?${queryString}`;
   }
 
   // Add Authorization header
   const headers = {
     'Content-Type': 'application/json',
-    ...(API_TOKEN && { 'Authorization': Bearer  }),
+    ...(API_TOKEN && { 'Authorization': `Bearer ${API_TOKEN}` }),
     ...fetchOptions.headers,
   };
 
@@ -32,7 +32,7 @@ export async function apiClient(endpoint: string, options: FetchOptions = {}) {
   });
 
   if (!response.ok) {
-    throw new Error(API error:  );
+    throw new Error(`API error: ${response.status} ${response.statusText}`);
   }
 
   return response.json();
