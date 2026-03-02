@@ -55,6 +55,9 @@ export const api = {
       body: data ? JSON.stringify(data) : undefined 
     }),
   
-  delete: (endpoint: string) => 
-    apiClient(endpoint, { method: 'DELETE' }),
+  delete: (endpoint: string, data?: any) => 
+    apiClient(endpoint, { 
+      method: 'DELETE',
+      body: data ? JSON.stringify(data) : undefined 
+    }),
 };

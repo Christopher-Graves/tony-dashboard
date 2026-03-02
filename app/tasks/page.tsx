@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Plus, Trash2, ChevronRight, Filter, Bot } from 'lucide-react';
+import { api } from '@/lib/api';
 
 interface TaskNote {
   timestamp: string;
@@ -102,9 +103,10 @@ export default function TasksPage() {
   const fetchTasks = async () => {
     try {
       const url = filterAgent === 'all' ? '/api/tasks' : `/api/tasks?category=${filterAgent}`;
-      const response = await fetch(url);
-      if (response.ok) {
-        const data = await response.json();
+      const data = filterAgent === 'all' 
+        ? await api.get('/api/tasks')
+        : await api.get('/api/tasks', { category: filterAgent });
+      if (data) {
         setTasks(Array.isArray(data) ? data : []);
       }
     } catch (err) {
@@ -120,21 +122,17 @@ export default function TasksPage() {
     if (!form.title.trim()) return;
     setSubmitting(true);
     try {
-      const response = await fetch('/api/tasks', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: form.title.trim(),
-          description: form.description.trim(),
-          category: form.category,
-          priority: form.priority,
-          status: form.status,
-          source: 'manual',
-          createdBy: 'chris',
-          tags: form.tags.split(',').map(t => t.trim()).filter(Boolean),
-        }),
+      const response = await api.post('/api/tasks', {
+        title: form.title.trim(),
+        description: form.description.trim(),
+        category: form.category,
+        priority: form.priority,
+        status: form.status,
+        source: 'manual',
+        createdBy: 'chris',
+        tags: form.tags.split(',').map(t => t.trim()).filter(Boolean),
       });
-      if (response.ok) {
+      if (response) {
         await fetchTasks();
         setShowModal(false);
         setForm({ title: '', description: '', category: 'tony', priority: 'medium', status: 'backlog', tags: '' });
@@ -148,13 +146,8 @@ export default function TasksPage() {
 
   const moveTask = async (task: Task, nextStatus: Status) => {
     try {
-      const response = await fetch('/api/tasks', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...task, status: nextStatus }),
-      });
-      if (response.ok) {
-        const saved = await response.json();
+      const saved = await api.put('/api/tasks', { ...task, status: nextStatus });
+      if (saved) {
         setTasks(prev => prev.map(t => t.id === saved.id ? saved : t));
       }
     } catch (err) {
@@ -165,12 +158,8 @@ export default function TasksPage() {
   const deleteTask = async (id: string) => {
     setDeleting(id);
     try {
-      const response = await fetch('/api/tasks', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id }),
-      });
-      if (response.ok) setTasks(prev => prev.filter(t => t.id !== id));
+      const response = await api.delete('/api/tasks', { id });
+      if (response) setTasks(prev => prev.filter(t => t.id !== id));
     } catch (err) {
       console.error('Error deleting task:', err);
     } finally {

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { CalendarDays, Clock, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
+import { api } from '@/lib/api';
 
 interface CronJob {
   id: string;
@@ -32,9 +33,7 @@ export default function CalendarPage() {
   async function fetchJobs() {
     try {
       setLoading(true);
-      const res = await fetch('/api/crons');
-      if (!res.ok) throw new Error('Failed to fetch cron jobs');
-      const data = await res.json();
+      const data = await api.get('/api/crons');
       setJobs(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');

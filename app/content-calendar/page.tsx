@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { CheckCircle2, Circle } from 'lucide-react';
+import { api } from '@/lib/api';
 
 interface VideoStages {
   docket: boolean;
@@ -52,8 +53,7 @@ export default function ContentCalendarPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await fetch('/api/content-calendar');
-        const json = await res.json();
+        const json = await api.get('/api/content-calendar');
         setData(json);
       } catch (e) {
         console.error('Failed to fetch content calendar:', e);

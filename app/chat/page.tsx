@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Send, Square, Wifi, WifiOff, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { api } from '@/lib/api';
 
 type ConnStatus = 'disconnected' | 'connecting' | 'connected' | 'error';
 
@@ -44,7 +45,7 @@ export default function ChatPage() {
 
   // Fetch gateway token and URL from server
   useEffect(() => {
-    fetch('/api/gateway-token')
+    api.get('/api/gateway-token')
       .then((r) => r.json())
       .then((d) => {
         tokenRef.current = d.token || '';

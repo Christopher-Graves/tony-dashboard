@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RefreshCw, Zap, TrendingUp, Clock, AlertTriangle, CheckCircle, Activity } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
+import { api } from '@/lib/api';
 
 interface PlanUsage {
   plan: string;
@@ -134,7 +135,7 @@ export default function UsagePage() {
 
   const fetchUsage = useCallback(async () => {
     try {
-      const res = await fetch('/api/usage?type=plan');
+      const res = await api.get('/api/usage', {"type":"plan"});
       if (res.ok) {
         const data = await res.json();
         setPlan(data.plan);
@@ -147,14 +148,9 @@ export default function UsagePage() {
     setRefreshing(true);
     setRefreshError(null);
     try {
-      const res = await fetch('/api/usage', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'refresh' }),
-      });
-      const data = await res.json();
-      if (!res.ok || data.error) {
-        const msg = data.error || 'Refresh failed';
+      const data = await api.post('/api/usage', { action: 'refresh' });
+      if (data.error) {
+        const msg = data.error;
         if (msg.includes('ECONNREFUSED') || msg.includes('18800') || msg.includes('browserType')) {
           setRefreshError('OpenClaw browser not running. Start it with: openclaw browser start');
         } else {

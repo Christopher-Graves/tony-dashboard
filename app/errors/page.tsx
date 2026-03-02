@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { AlertTriangle } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { api } from '@/lib/api';
 
 interface LogEntry {
   timestamp: string;
@@ -20,7 +21,7 @@ export default function ErrorsPage() {
 
   const fetchErrors = async () => {
     try {
-      const response = await fetch('/api/errors?limit=50');
+      const response = await api.get('/api/errors', {"limit":"50"});
       if (response.ok) {
         const data = await response.json();
         setErrors(Array.isArray(data) ? data : []);

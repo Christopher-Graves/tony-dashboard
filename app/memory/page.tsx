@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Search, Brain, Calendar, FileText } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import { api } from '@/lib/api';
 
 interface MemoryFile {
   path: string;
@@ -33,9 +34,7 @@ export default function MemoryPage() {
   async function fetchMemories() {
     try {
       setLoading(true);
-      const res = await fetch('/api/memory');
-      if (!res.ok) throw new Error('Failed to fetch memories');
-      const data = await res.json();
+      const data = await api.get('/api/memory');
       setMemories(data);
       setFilteredMemories(data);
     } catch (err) {

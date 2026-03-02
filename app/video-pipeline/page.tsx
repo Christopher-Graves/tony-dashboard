@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { api } from '@/lib/api';
 
 interface Docket {
   slug: string;
@@ -28,7 +29,7 @@ export default function VideoPipelinePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/video-pipeline')
+    api.get('/api/video-pipeline')
       .then(res => res.json())
       .then(data => {
         setDockets(data.dockets || []);

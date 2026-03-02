@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RefreshCw, Trash2, Archive, ChevronDown, ChevronUp, AlertTriangle, Search } from 'lucide-react';
+import { api } from '@/lib/api';
 
 interface SessionData {
   key: string;
@@ -89,9 +90,7 @@ export default function SessionsPage() {
 
   const fetchSessions = async () => {
     try {
-      const res = await fetch('/api/sessions');
-      if (!res.ok) throw new Error('Failed to fetch');
-      const data = await res.json();
+      const data = await api.get('/api/sessions');
       setSessions(data.sessions || []);
       setSummary(data.summary || null);
       setError(null);
@@ -151,12 +150,7 @@ export default function SessionsPage() {
     setConfirmDelete(null);
     setActionLoading(session.key);
     try {
-      const res = await fetch('/api/sessions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action, sessionKey: session.key, agentId: session.agentId }),
-      });
-      const data = await res.json();
+      const data = await api.post('/api/sessions', { action, sessionKey: session.key, agentId: session.agentId });
       if (data.success) {
         fetchSessions();
       } else {
@@ -177,11 +171,7 @@ export default function SessionsPage() {
       const session = sessions.find(s => s.key === key);
       if (!session) continue;
       try {
-        await fetch('/api/sessions', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'delete', sessionKey: session.key, agentId: session.agentId }),
-        });
+        await api.post('/api/sessions', { action: 'delete', sessionKey: session.key, agentId: session.agentId });
       } catch {
         // continue
       }

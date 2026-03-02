@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { formatDistanceToNow } from 'date-fns';
+import { api } from '@/lib/api';
 
 interface Account {
   id: number;
@@ -56,22 +57,11 @@ export default function FinancePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [accountsRes, budgetsRes, transactionsRes, spendingRes] = await Promise.all([
-          fetch('/api/finance/accounts'),
-          fetch('/api/finance/budgets'),
-          fetch('/api/finance/transactions?limit=10'),
-          fetch('/api/finance/spending'),
-        ]);
-
-        if (!accountsRes.ok || !budgetsRes.ok || !transactionsRes.ok || !spendingRes.ok) {
-          throw new Error('Failed to fetch finance data');
-        }
-
         const [accountsData, budgetsData, transactionsData, spendingData] = await Promise.all([
-          accountsRes.json(),
-          budgetsRes.json(),
-          transactionsRes.json(),
-          spendingRes.json(),
+          api.get('/api/finance/accounts'),
+          api.get('/api/finance/budgets'),
+          api.get('/api/finance/transactions', { limit: '10' }),
+          api.get('/api/finance/spending'),
         ]);
 
         setAccounts(accountsData);

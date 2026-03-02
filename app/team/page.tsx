@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Users, Activity, Clock, Zap } from 'lucide-react';
+import { api } from '@/lib/api';
 
 interface Agent {
   id: string;
@@ -36,8 +37,8 @@ export default function TeamPage() {
       
       // Fetch agents and identities
       const [agentsRes, tasksRes] = await Promise.all([
-        fetch('/api/agents'),
-        fetch('/api/tasks').catch(() => ({ ok: false, json: async () => [] })),
+        api.get('/api/agents'),
+        api.get('/api/tasks').catch(() => ({ ok: false, json: async () => [] })),
       ]);
       
       if (!agentsRes.ok) throw new Error('Failed to fetch agents');
@@ -49,9 +50,8 @@ export default function TeamPage() {
       const agentsWithIdentity = await Promise.all(
         agentsData.map(async (agent: Agent) => {
           try {
-            const identityRes = await fetch(`/api/identity?agent=${agent.id}`);
-            if (identityRes.ok) {
-              const identity = await identityRes.json();
+            const identity = await api.get('/api/identity', { agent: agent.id });
+            if (identity) {
               agent.identity = identity;
             }
           } catch {

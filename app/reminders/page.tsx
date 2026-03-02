@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Bell } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { api } from '@/lib/api';
 
 interface Reminder {
   id: string;
@@ -21,7 +22,7 @@ export default function RemindersPage() {
 
   const fetchReminders = async () => {
     try {
-      const response = await fetch('/api/crons');
+      const response = await api.get('/api/crons');
       if (!response.ok) throw new Error('Failed to fetch reminders');
       const data = await response.json();
       

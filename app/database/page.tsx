@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Database } from 'lucide-react';
+import { api } from '@/lib/api';
 
 interface TableSchema {
   column_name: string;
@@ -21,7 +22,7 @@ export default function DatabasePage() {
 
   const fetchTables = async () => {
     try {
-      const response = await fetch('/api/db/tables');
+      const response = await api.get('/api/db/tables');
       const result = await response.json();
       if (response.ok && Array.isArray(result)) {
         setTables(result);
@@ -40,14 +41,8 @@ export default function DatabasePage() {
   const fetchTableData = async (table: string) => {
     setLoading(true);
     try {
-      const response = await fetch('/api/db/query', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ table }),
-      });
-      
-      if (response.ok) {
-        const result = await response.json();
+      const result = await api.post('/api/db/query', { table });
+      if (result) {
         setSchema(result.schema || []);
         setData(result.data || []);
         setSelectedTable(table);

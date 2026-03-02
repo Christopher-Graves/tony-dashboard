@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { api } from '@/lib/api';
 
 interface SessionInfo {
   sessionId: string;
@@ -31,7 +32,7 @@ export default function TokensPage() {
 
   const fetchTokens = async () => {
     try {
-      const response = await fetch('/api/tokens');
+      const response = await api.get('/api/tokens');
       if (response.ok) {
         const data = await response.json();
         setUsage(Array.isArray(data) ? data : []);

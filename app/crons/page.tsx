@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { RefreshCw, Terminal } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { api } from '@/lib/api';
 
 interface CronJob {
   id: string;
@@ -27,7 +28,7 @@ export default function CronsPage() {
 
   const fetchCrons = async () => {
     try {
-      const response = await fetch('/api/crons');
+      const response = await api.get('/api/crons');
       if (!response.ok) throw new Error('Failed to fetch cron jobs');
       const data = await response.json();
       setCrons(Array.isArray(data) ? data : []);

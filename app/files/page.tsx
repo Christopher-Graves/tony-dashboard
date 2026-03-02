@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { api } from '@/lib/api';
 import {
   FolderOpen, File, ChevronRight, ChevronDown, Save, X, RefreshCw,
   FileText, Code, Settings, Database, ArrowLeft, Edit3, Eye, Search
@@ -145,7 +146,7 @@ export default function FilesPage() {
 
   // Load workspaces
   useEffect(() => {
-    fetch('/api/files')
+    api.get('/api/files')
       .then(r => r.json())
       .then(d => setWorkspaces(d.workspaces || []))
       .catch(() => setError('Failed to load workspaces'))
@@ -160,8 +161,7 @@ export default function FilesPage() {
     setIsEditing(false);
     setSearchQuery('');
     try {
-      const res = await fetch(`/api/files?agent=${agent}`);
-      const data = await res.json();
+      const data = await api.get('/api/files', { agent });
       setTree(data.tree || []);
       setError(null);
     } catch {
@@ -183,8 +183,7 @@ export default function FilesPage() {
     setFileLoading(true);
     setSaveStatus(null);
     try {
-      const res = await fetch(`/api/files?agent=${selectedAgent}&path=${encodeURIComponent(entry.path)}`);
-      const data = await res.json();
+      const data = await api.get(`/api/files`, { agent: selectedAgent, path: entry.path });
       if (data.error) {
         setFileContent(`Error: ${data.error}`);
       } else {
@@ -203,12 +202,7 @@ export default function FilesPage() {
     setSaving(true);
     setSaveStatus(null);
     try {
-      const res = await fetch('/api/files', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ agent: selectedAgent, path: selectedFile.path, content: editedContent }),
-      });
-      const data = await res.json();
+      const data = await api.post('/api/files', { agent: selectedAgent, path: selectedFile.path, content: editedContent });
       if (data.success) {
         setFileContent(editedContent);
         setSaveStatus('Saved!');
