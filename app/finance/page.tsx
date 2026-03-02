@@ -35,30 +35,51 @@ interface Transaction {
   date: string;
   name: string;
   merchantName: string | null;
+  merchant_name?: string | null;
   amount: number;
   pending: boolean;
   category: string | null;
   categoryIcon: string | null;
+  category_icon?: string | null;
+}
+
+interface Category {
+  id: number;
+  name: string;
+  description: string;
+  icon: string;
+}
+
+interface UncategorizedData {
+  count: number;
+  transactions: Transaction[];
 }
 
 export default function FinancePage() {
   const [summary, setSummary] = useState<AmexSummary | null>(null);
   const [categories, setCategories] = useState<CategorySpending[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [uncategorized, setUncategorized] = useState<UncategorizedData>({ count: 0, transactions: [] });
+  const [availableCategories, setAvailableCategories] = useState<Category[]>([]);
+  const [showUncategorized, setShowUncategorized] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [statementData, budgetData] = await Promise.all([
+        const [statementData, budgetData, uncategorizedData, categoriesData] = await Promise.all([
           api.get('/api/finance/amex-statement'),
           api.get('/api/finance/amex-budget'),
+          api.get('/api/finance/uncategorized'),
+          api.get('/api/finance/categories'),
         ]);
 
         setSummary(statementData.summary);
         setTransactions(statementData.transactions.slice(0, 20));
         setCategories(budgetData.categories);
+        setUncategorized(uncategorizedData);
+        setAvailableCategories(categoriesData);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');
       } finally {
@@ -70,6 +91,34 @@ export default function FinancePage() {
     const interval = setInterval(fetchData, 60000);
     return () => clearInterval(interval);
   }, []);
+
+  const handleCategorize = async (transactionId: number, categoryId: number, createRule: boolean) => {
+    try {
+      await api.put(`/api/finance/transactions/${transactionId}/categorize`, {
+        category_id: categoryId,
+        create_rule: createRule
+      });
+
+      // Remove from uncategorized list
+      setUncategorized(prev => ({
+        count: prev.count - 1,
+        transactions: prev.transactions.filter(t => t.id !== transactionId)
+      }));
+
+      // Refresh all data to update counts and summaries
+      const [statementData, budgetData] = await Promise.all([
+        api.get('/api/finance/amex-statement'),
+        api.get('/api/finance/amex-budget'),
+      ]);
+
+      setSummary(statementData.summary);
+      setTransactions(statementData.transactions.slice(0, 20));
+      setCategories(budgetData.categories);
+    } catch (err) {
+      console.error('Error categorizing transaction:', err);
+      alert('Failed to categorize transaction');
+    }
+  };
 
   if (loading) {
     return (
@@ -132,6 +181,64 @@ export default function FinancePage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Uncategorized Transactions */}
+      {uncategorized.count > 0 && (
+        <Card className="mb-6">
+          <CardHeader 
+            className="cursor-pointer hover:bg-accent/50 transition-colors"
+            onClick={() => setShowUncategorized(!showUncategorized)}
+          >
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center gap-2">
+                ❓ Uncategorized Transactions
+                <Badge variant="secondary">{uncategorized.count}</Badge>
+              </CardTitle>
+              <span className="text-xl">{showUncategorized ? '▼' : '▶'}</span>
+            </div>
+          </CardHeader>
+          {showUncategorized && (
+            <CardContent>
+              <div className="space-y-3 max-h-[500px] overflow-y-auto">
+                {uncategorized.transactions.map((txn) => (
+                  <div key={txn.id} className="flex items-center gap-3 p-3 border rounded-lg">
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-sm truncate">
+                        {txn.merchant_name || txn.merchantName || txn.name}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {new Date(txn.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} • ${txn.amount.toFixed(2)}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <select
+                        className="px-3 py-1.5 text-sm border rounded-md bg-background"
+                        onChange={(e) => {
+                          const categoryId = parseInt(e.target.value);
+                          if (categoryId) {
+                            const createRule = window.confirm(
+                              `Apply "${availableCategories.find(c => c.id === categoryId)?.name}" to all future transactions from this merchant?`
+                            );
+                            handleCategorize(txn.id, categoryId, createRule);
+                          }
+                        }}
+                        defaultValue=""
+                      >
+                        <option value="" disabled>Select category...</option>
+                        {availableCategories.map((cat) => (
+                          <option key={cat.id} value={cat.id}>
+                            {cat.icon} {cat.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          )}
+        </Card>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Category Breakdown */}
