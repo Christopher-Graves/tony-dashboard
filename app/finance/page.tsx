@@ -1,73 +1,64 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { formatDistanceToNow } from 'date-fns';
+import { Progress } from '@/components/ui/progress';
 import { api } from '@/lib/api';
 
-interface Account {
-  id: number;
-  name: string;
-  official_name: string | null;
-  type: string;
-  subtype: string;
-  mask: string;
-  current_balance: number;
-  available_balance: number | null;
-  institution_name: string;
+interface AmexSummary {
+  accountName: string;
+  accountMask: string;
+  statementStart: string;
+  statementEnd: string;
+  transactionCount: number;
+  totalSpent: number;
+  budget: number;
+  remaining: number;
+  percentUsed: number;
+  status: 'OK' | 'WARNING' | 'OVER_BUDGET';
 }
 
-interface BudgetAlert {
+interface CategorySpending {
   category: string;
   icon: string;
-  target_amount: number;
+  transactionCount: number;
   spent: number;
+  monthlyBudget: number;
   remaining: number;
-  percent_used: number;
-  status: 'OK' | 'WARNING' | 'OVER_BUDGET';
+  percentUsed: number;
+  status: string;
 }
 
 interface Transaction {
   id: number;
-  name: string;
-  merchant_name: string | null;
-  amount: number;
   date: string;
-  category: string;
-  icon: string;
+  name: string;
+  merchantName: string | null;
+  amount: number;
   pending: boolean;
-}
-
-interface SpendingByCategory {
-  category: string;
-  icon: string;
-  total_spent: number;
-  transaction_count: number;
+  category: string | null;
+  categoryIcon: string | null;
 }
 
 export default function FinancePage() {
-  const [accounts, setAccounts] = useState<Account[]>([]);
-  const [budgets, setBudgets] = useState<BudgetAlert[]>([]);
+  const [summary, setSummary] = useState<AmexSummary | null>(null);
+  const [categories, setCategories] = useState<CategorySpending[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [spending, setSpending] = useState<SpendingByCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [accountsData, budgetsData, transactionsData, spendingData] = await Promise.all([
-          api.get('/api/finance/accounts'),
-          api.get('/api/finance/budgets'),
-          api.get('/api/finance/transactions', { limit: '10' }),
-          api.get('/api/finance/spending'),
+        const [statementData, budgetData] = await Promise.all([
+          api.get('/api/finance/amex-statement'),
+          api.get('/api/finance/amex-budget'),
         ]);
 
-        setAccounts(accountsData);
-        setBudgets(budgetsData);
-        setTransactions(transactionsData);
-        setSpending(spendingData);
+        setSummary(statementData.summary);
+        setTransactions(statementData.transactions.slice(0, 20));
+        setCategories(budgetData.categories);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');
       } finally {
@@ -76,165 +67,97 @@ export default function FinancePage() {
     };
 
     fetchData();
-    const interval = setInterval(fetchData, 60000); // Refresh every minute
+    const interval = setInterval(fetchData, 60000);
     return () => clearInterval(interval);
   }, []);
-
-  const totalBalance = accounts.reduce((sum, acc) => sum + acc.current_balance, 0);
-  const totalBudget = budgets.reduce((sum, b) => sum + b.target_amount, 0);
-  const totalSpent = budgets.reduce((sum, b) => sum + b.spent, 0);
 
   if (loading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <p className="text-muted-foreground">Loading finance data...</p>
+        <p className="text-muted-foreground">Loading Amex statement...</p>
       </div>
     );
   }
 
-  if (error) {
+  if (error || !summary) {
     return (
       <div className="flex h-full items-center justify-center">
         <div className="text-center">
-          <p className="text-destructive mb-4">Error: {error}</p>
-          <p className="text-sm text-muted-foreground">
-            Make sure the finance tracker database is set up and the API routes are configured.
-          </p>
+          <p className="text-destructive mb-4">Error: {error || 'No data'}</p>
         </div>
       </div>
     );
   }
 
+  const daysRemaining = Math.ceil(
+    (new Date(summary.statementEnd).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+  );
+
+  const statementStart = new Date(summary.statementStart).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const statementEnd = new Date(summary.statementEnd).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
   return (
     <div className="p-4 md:p-6 lg:p-8">
       <div className="mb-6 md:mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">💰 Finance</h1>
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">💳 Amex Statement</h1>
         <p className="text-sm md:text-base text-muted-foreground">
-          Track your spending, budgets, and accounts
+          {statementStart} – {statementEnd} • {daysRemaining} days remaining
         </p>
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total Balance</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              ${totalBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+      {/* Main Spending Card */}
+      <Card className="mb-6">
+        <CardContent className="pt-6">
+          <div className="text-center mb-4">
+            <div className="text-5xl font-bold mb-2">
+              ${summary.totalSpent.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+              <span className="text-2xl text-muted-foreground font-normal"> / ${summary.budget.toLocaleString()}</span>
             </div>
-            <p className="text-xs text-muted-foreground mt-1">{accounts.length} accounts</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Monthly Budget</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              ${totalSpent.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              of ${totalBudget.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-              {' '}({totalBudget > 0 ? Math.round((totalSpent / totalBudget) * 100) : 0}%)
+            <p className="text-sm text-muted-foreground">
+              ${summary.remaining.toLocaleString()} remaining • {Math.round(summary.percentUsed)}% used
             </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Budget Status</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-2">
-              {budgets.filter(b => b.status === 'OVER_BUDGET').length > 0 ? (
-                <Badge variant="destructive" className="text-sm">
-                  {budgets.filter(b => b.status === 'OVER_BUDGET').length} Over Budget
-                </Badge>
-              ) : budgets.filter(b => b.status === 'WARNING').length > 0 ? (
-                <Badge className="bg-orange-600 text-sm">
-                  {budgets.filter(b => b.status === 'WARNING').length} Warning
-                </Badge>
-              ) : (
-                <Badge className="bg-emerald-600 text-sm">All Good</Badge>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+          <Progress 
+            value={summary.percentUsed} 
+            className="h-3"
+          />
+          <div className="mt-4 flex justify-between items-center">
+            <Badge 
+              variant={summary.status === 'OVER_BUDGET' ? 'destructive' : summary.status === 'WARNING' ? 'default' : 'secondary'}
+              className={summary.status === 'WARNING' ? 'bg-orange-600' : summary.status === 'OK' ? 'bg-emerald-600' : ''}
+            >
+              {summary.status === 'OVER_BUDGET' ? '🚨 Over Budget' : summary.status === 'WARNING' ? '⚠️ Warning' : '✅ On Track'}
+            </Badge>
+            <span className="text-sm text-muted-foreground">{summary.transactionCount} transactions</span>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Accounts */}
+        {/* Category Breakdown */}
         <Card>
           <CardHeader>
-            <CardTitle>🏦 Accounts</CardTitle>
+            <CardTitle>📊 Spending by Category</CardTitle>
           </CardHeader>
           <CardContent>
-            {accounts.length === 0 ? (
-              <p className="text-muted-foreground text-sm">
-                No accounts connected. Run the Plaid Link server to connect accounts.
-              </p>
+            {categories.length === 0 ? (
+              <p className="text-muted-foreground text-sm">No categorized spending yet.</p>
             ) : (
-              <div className="space-y-3">
-                {accounts.map((account) => (
-                  <div key={account.id} className="flex items-center justify-between p-3 rounded-lg bg-accent/50">
-                    <div>
-                      <div className="font-medium">{account.name}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {account.institution_name} •••• {account.mask}
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="font-semibold">
-                        ${account.current_balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                      </div>
-                      {account.available_balance && (
-                        <div className="text-xs text-muted-foreground">
-                          ${account.available_balance.toLocaleString('en-US', { minimumFractionDigits: 2 })} available
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Budget vs Actual */}
-        <Card>
-          <CardHeader>
-            <CardTitle>📊 Budget vs Actual</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {budgets.length === 0 ? (
-              <p className="text-muted-foreground text-sm">
-                No budgets set for this month.
-              </p>
-            ) : (
-              <div className="space-y-3">
-                {budgets.slice(0, 6).map((budget) => (
-                  <div key={budget.category} className="space-y-1">
-                    <div className="flex items-center justify-between text-sm">
-                      <span>
-                        {budget.icon} {budget.category}
-                      </span>
+              <div className="space-y-4">
+                {categories.map((cat) => (
+                  <div key={cat.category}>
+                    <div className="flex items-center justify-between text-sm mb-1">
                       <span className="font-medium">
-                        ${budget.spent.toFixed(2)} / ${budget.target_amount.toFixed(2)}
+                        {cat.icon} {cat.category}
+                      </span>
+                      <span className="text-muted-foreground">
+                        ${cat.spent.toLocaleString()} • {cat.transactionCount} txns
                       </span>
                     </div>
-                    <div className="h-2 bg-accent rounded-full overflow-hidden">
+                    <div className="h-1.5 bg-accent rounded-full overflow-hidden">
                       <div
-                        className={`h-full transition-all ${
-                          budget.status === 'OVER_BUDGET'
-                            ? 'bg-red-500'
-                            : budget.status === 'WARNING'
-                            ? 'bg-orange-500'
-                            : 'bg-emerald-500'
-                        }`}
-                        style={{ width: `${Math.min(budget.percent_used, 100)}%` }}
+                        className="h-full bg-primary"
+                        style={{ width: `${(cat.spent / summary.totalSpent) * 100}%` }}
                       />
                     </div>
                   </div>
@@ -251,58 +174,21 @@ export default function FinancePage() {
           </CardHeader>
           <CardContent>
             {transactions.length === 0 ? (
-              <p className="text-muted-foreground text-sm">
-                No transactions found.
-              </p>
+              <p className="text-muted-foreground text-sm">No transactions in this statement period.</p>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-2 max-h-[400px] overflow-y-auto">
                 {transactions.map((txn) => (
-                  <div key={txn.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-accent/50">
-                    <div className="flex-1">
-                      <div className="font-medium text-sm">
-                        {txn.merchant_name || txn.name}
-                        {txn.pending && (
-                          <Badge variant="secondary" className="ml-2 text-xs">Pending</Badge>
-                        )}
+                  <div key={txn.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-accent/50 transition-colors">
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-sm truncate">
+                        {txn.merchantName || txn.name}
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        {txn.icon} {txn.category} • {new Date(txn.date).toLocaleDateString()}
+                        {txn.categoryIcon} {txn.category || 'Uncategorized'} • {new Date(txn.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                       </div>
                     </div>
-                    <div className={`font-semibold ${txn.amount < 0 ? 'text-red-400' : 'text-emerald-400'}`}>
-                      {txn.amount < 0 ? '-' : '+'}${Math.abs(txn.amount).toFixed(2)}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Monthly Spending by Category */}
-        <Card>
-          <CardHeader>
-            <CardTitle>📈 Monthly Spending</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {spending.length === 0 ? (
-              <p className="text-muted-foreground text-sm">
-                No spending data for this month.
-              </p>
-            ) : (
-              <div className="space-y-3">
-                {spending.slice(0, 6).map((cat) => (
-                  <div key={cat.category} className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <div className="text-sm font-medium">
-                        {cat.icon} {cat.category}
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        {cat.transaction_count} transactions
-                      </div>
-                    </div>
-                    <div className="font-semibold">
-                      ${cat.total_spent.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                    <div className="font-semibold text-sm ml-2">
+                      ${txn.amount.toFixed(2)}
                     </div>
                   </div>
                 ))}

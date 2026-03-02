@@ -31,14 +31,14 @@ export async function GET(request: NextRequest) {
         spending AS (
           SELECT 
             COUNT(*) as transaction_count,
-            COALESCE(SUM(ABS(amount)), 0) as total_spent
+            COALESCE(SUM(amount), 0) as total_spent
           FROM transactions t
           CROSS JOIN statement_period sp
           CROSS JOIN amex_account aa
           WHERE t.account_id = aa.id
             AND t.date >= sp.start_date
             AND t.date <= sp.end_date
-            AND t.amount < 0
+            AND t.amount > 0
             AND NOT t.pending
         )
         SELECT 
@@ -116,3 +116,4 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
