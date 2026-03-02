@@ -1,8 +1,40 @@
-# Tony Dashboard Changelog
+﻿# Tony Dashboard Changelog
+
+## 2026-03-02 - Audio Transcription Pipeline
+
+### ✨ New Features
+
+#### Audio Transcription (/audio)
+- **GPU-accelerated transcription** using faster-whisper with CUDA support
+- Upload audio files (.m4a, .mp3, .wav, .ogg, .webm)
+- Automatic transcription with Whisper large-v3 model
+- **Smart extraction** of Tasks, Ideas, Goals, Plans, and Memories from transcripts
+- Real-time progress indicator during upload and transcription
+- Browse past transcripts with metadata (duration, language, segments)
+- Transcripts saved to C:\Users\chris\.openclaw\workspace\audio-transcripts\
+
+#### Backend
+- POST /api/audio/upload - File upload and transcription endpoint
+- GET /api/audio/transcripts - List all past transcripts
+- 	ony-tools/transcribe.py - Python script with faster-whisper GPU support
+- Keyword-based extraction for structured data from transcripts
+
+#### UI/UX
+- Added Audio navigation item with Mic icon to sidebar
+- Clean upload interface matching dashboard design
+- Transcript display with extracted items in categorized sections
+- Color-coded badges for different item types
+- Past transcripts list with expandable details
+
+### 🐛 Bug Fixes
+- Fixed TypeScript error in pp/files/page.tsx (null check for selectedAgent)
+- Fixed TypeScript error in scripts/apply-category-rules.ts (null check for rowCount)
+
+---
 
 ## 2026-02-20 - Performance Overhaul & New Features
 
-### 🚀 Performance Improvements
+### ðŸš€ Performance Improvements
 
 #### Gateway API (`/api/gateway`)
 - **Added in-memory caching** with 30-second TTL
@@ -19,7 +51,7 @@
 - Falls back to stale cache on errors for resilience
 - Performance: ~10x faster on cache hit (< 100ms vs 1-2s)
 
-### ✨ New Features
+### âœ¨ New Features
 
 #### Memory Browser (`/memory`)
 - Browse all agent memory files from `workspace-*/memory/` directories
@@ -53,7 +85,7 @@
 - Extracts emoji, role, and description
 - Graceful fallback for missing files
 
-### 🧪 Testing
+### ðŸ§ª Testing
 
 #### New Test Suite
 - Added Node's built-in test runner (no Jest dependency)
@@ -65,7 +97,7 @@
 - Run tests: `npm test`
 - Watch mode: `npm run test:watch`
 
-### 🎨 UI Updates
+### ðŸŽ¨ UI Updates
 
 #### Updated Sidebar
 - Added **Memory** (Brain icon)
@@ -73,7 +105,7 @@
 - Added **Team** (Users icon)
 - Reordered for better workflow
 
-### 📋 API Summary
+### ðŸ“‹ API Summary
 
 | Route | Method | Caching | Description |
 |-------|--------|---------|-------------|
@@ -84,7 +116,7 @@
 | `/api/tasks` | GET/POST/PUT/DELETE | None | Task CRUD operations |
 | `/api/crons` | GET | None | Cron job listing |
 
-### 🔧 Technical Details
+### ðŸ”§ Technical Details
 
 - **Cache Strategy**: TTL-based, not event-based
 - **File Operations**: All async (`fs/promises`)
@@ -93,7 +125,7 @@
 - **TypeScript**: Fully typed throughout
 - **No New Dependencies**: Uses existing packages only
 
-### 📊 Performance Metrics
+### ðŸ“Š Performance Metrics
 
 | Metric | Before | After | Improvement |
 |--------|--------|-------|-------------|
@@ -102,7 +134,7 @@
 | Agents API (cold) | 1-2s | 1-2s | - |
 | Agents API (warm) | 1-2s | < 100ms | **10-20x faster** |
 
-### 🎯 Next Steps
+### ðŸŽ¯ Next Steps
 
 Potential future enhancements:
 - WebSocket support for real-time updates
