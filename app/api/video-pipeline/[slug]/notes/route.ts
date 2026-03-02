@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
+export const runtime = 'nodejs';
+
 const DOCKETS_PATH = process.env.DOCKETS_PATH || 'C:\\Users\\chris\\.openclaw\\workspace-youtube\\dockets';
 
 export async function POST(

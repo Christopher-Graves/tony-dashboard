@@ -3,6 +3,8 @@ import { readdir, readFile, stat } from 'fs/promises';
 import { join } from 'path';
 import { homedir } from 'os';
 
+export const runtime = 'nodejs';
+
 interface MemoryFile {
   path: string;
   agent: string;

@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 
+export const runtime = 'nodejs';
+
 const LOG_DIR = 'C:\\tmp\\openclaw';
 
 interface LogEntry {

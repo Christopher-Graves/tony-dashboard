@@ -3,6 +3,8 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { homedir } from 'os';
 
+export const runtime = 'nodejs';
+
 const TASKS_FILE = join(homedir(), '.openclaw', 'workspace', 'tony-dashboard', 'data', 'tasks.json');
 
 interface TaskNote {

@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
+export const runtime = 'nodejs';
+
 const CONTENT_CALENDAR_PATH = path.join(
   'C:',
   'Users',

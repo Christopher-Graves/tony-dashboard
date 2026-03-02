@@ -3,6 +3,8 @@ import { readFile } from 'fs/promises';
 import { join } from 'path';
 import { homedir } from 'os';
 
+export const runtime = 'nodejs';
+
 const OPENCLAW_ROOT = join(homedir(), '.openclaw');
 
 interface Identity {

@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { readFileSync, existsSync, writeFileSync } from 'fs';
 import { execSync } from 'child_process';
 
+export const runtime = 'nodejs';
+
 const CACHE_PATH = 'C:\\Users\\chris\\.openclaw\\workspace\\tony-dashboard\\.cron-cache.json';
 
 // In-memory cache with TTL

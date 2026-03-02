@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 
+export const runtime = 'nodejs';
+
 // NOTE: The gateway has no REST API. Crons can only be triggered via WebSocket
 // or via the OpenClaw CLI: `openclaw cron run <id>`
 // This endpoint is intentionally disabled.

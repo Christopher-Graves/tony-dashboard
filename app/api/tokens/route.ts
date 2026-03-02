@@ -3,6 +3,8 @@ import { readFileSync, readdirSync, existsSync, statSync } from 'fs';
 import { join } from 'path';
 import { homedir } from 'os';
 
+export const runtime = 'nodejs';
+
 const AGENTS_DIR = join(homedir(), '.openclaw', 'agents');
 const CONFIG_PATH = join(homedir(), '.openclaw', 'openclaw.json');
 

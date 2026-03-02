@@ -3,6 +3,8 @@ import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { homedir } from 'os';
 
+export const runtime = 'nodejs';
+
 export async function GET() {
   const home = homedir();
   const agentsDir = join(home, '.openclaw', 'agents');

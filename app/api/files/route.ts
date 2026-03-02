@@ -3,6 +3,8 @@ import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from '
 import { join, relative, sep, extname } from 'path';
 import { homedir } from 'os';
 
+export const runtime = 'nodejs';
+
 const OPENCLAW_DIR = join(homedir(), '.openclaw');
 
 // Remote agent workspaces mounted via SMB

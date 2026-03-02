@@ -4,6 +4,8 @@ import { promisify } from 'util';
 import { homedir } from 'os';
 import { join } from 'path';
 
+export const runtime = 'nodejs';
+
 const execAsync = promisify(exec);
 const OPENCLAW = join(homedir(), 'AppData', 'Roaming', 'npm', 'openclaw.cmd');
 

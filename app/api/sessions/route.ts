@@ -5,6 +5,8 @@ import { homedir } from 'os';
 import { join } from 'path';
 import { readFileSync, existsSync, readdirSync, statSync } from 'fs';
 
+export const runtime = 'nodejs';
+
 const execAsync = promisify(exec);
 const OPENCLAW = join(homedir(), 'AppData', 'Roaming', 'npm', 'openclaw.cmd');
 const AGENTS_DIR = join(homedir(), '.openclaw', 'agents');

@@ -4,6 +4,8 @@ import { join } from 'path';
 import { homedir } from 'os';
 import { execSync } from 'child_process';
 
+export const runtime = 'nodejs';
+
 const USAGE_DATA = join(homedir(), '.openclaw', 'workspace', 'usage-data.json');
 const SCRAPER = join(homedir(), '.openclaw', 'bin', 'usage-scraper.js');
 const STALE_MS = 5 * 60 * 1000; // 5 minutes

@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { writeFileSync } from 'fs';
 
+export const runtime = 'nodejs';
+
 const CACHE_PATH = 'C:\\Users\\chris\\.openclaw\\workspace\\tony-dashboard\\.cron-cache.json';
 
 // POST body: { jobs: [...] }
