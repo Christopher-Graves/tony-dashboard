@@ -46,7 +46,7 @@ export default function ChatPage() {
   // Fetch gateway token and URL from server
   useEffect(() => {
     api.get('/api/gateway-token')
-      .then((r) => r.json())
+      
       .then((d) => {
         tokenRef.current = d.token || '';
         gatewayUrlRef.current = (d.gatewayUrl || 'ws://localhost:18789').replace('http://', 'ws://').replace('https://', 'wss://');
