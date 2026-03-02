@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -26,7 +26,7 @@ export function middleware(request: NextRequest) {
     if (token !== validToken) {
       console.warn('[SECURITY] Unauthorized API access attempt:', {
         path: pathname,
-        ip: request.ip || request.headers.get('x-forwarded-for') || 'unknown',
+        ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
         timestamp: new Date().toISOString()
       });
       

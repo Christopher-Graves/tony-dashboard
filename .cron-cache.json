@@ -1,12 +1,12 @@
 {
-  "updatedAt": 1772368599856,
+  "updatedAt": 1772399591086,
   "jobs": [
     {
       "id": "0ffe84ff-d117-4f79-a135-ee96e45deff8",
       "name": "Ideas Channel Auto-Ingest",
       "enabled": true,
       "createdAtMs": 1772301109084,
-      "updatedAtMs": 1772368214413,
+      "updatedAtMs": 1772398813536,
       "schedule": {
         "kind": "cron",
         "expr": "*/15 6-23 * * *",
@@ -25,80 +25,11 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772369100000,
-        "lastRunAtMs": 1772368200027,
+        "nextRunAtMs": 1772399700000,
+        "lastRunAtMs": 1772398800021,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 14386,
-        "lastDelivered": false,
-        "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0
-      }
-    },
-    {
-      "id": "23c24b37-b37c-403a-b75c-8e8d6a3b77d5",
-      "name": "SMB Share Watchdog",
-      "enabled": true,
-      "createdAtMs": 1771947674782,
-      "updatedAtMs": 1772365773769,
-      "schedule": {
-        "kind": "every",
-        "everyMs": 300000,
-        "anchorMs": 1771947674782
-      },
-      "sessionTarget": "isolated",
-      "wakeMode": "now",
-      "payload": {
-        "kind": "agentTurn",
-        "message": "Run the SMB reconnect script silently: powershell -ExecutionPolicy Bypass -File C:\\Users\\chris\\.openclaw\\workspace\\scripts\\reconnect-smb.ps1. If any shares were reconnected, post a brief note to #tony-hq (C0AF5T5CE2F). If all shares are already connected, reply with HEARTBEAT_OK.",
-        "model": "sonnet",
-        "timeoutSeconds": 60
-      },
-      "delivery": {
-        "mode": "announce",
-        "channel": "last"
-      },
-      "state": {
-        "lastRunAtMs": 1772365741318,
-        "lastRunStatus": "error",
-        "lastStatus": "error",
-        "lastDurationMs": 32451,
-        "lastDeliveryStatus": "delivered",
-        "consecutiveErrors": 17,
-        "nextRunAtMs": 1772369373769,
-        "lastDelivered": true,
-        "lastError": "⚠️ 📱 Nodes: `powershell, -ExecutionPolicy, Bypass…` failed"
-      }
-    },
-    {
-      "id": "b9621ce1-71d7-4038-8d08-c62586ab0dae",
-      "agentId": "tony",
-      "name": "healthcheck:security-audit",
-      "enabled": true,
-      "createdAtMs": 1771947877103,
-      "updatedAtMs": 1772299037886,
-      "schedule": {
-        "kind": "cron",
-        "expr": "0 8 */2 * *",
-        "tz": "America/New_York"
-      },
-      "sessionTarget": "isolated",
-      "wakeMode": "now",
-      "payload": {
-        "kind": "agentTurn",
-        "message": "Run a security audit: execute 'openclaw security audit --deep' and check for any new listening ports on 0.0.0.0. Post findings to #engineering channel. If everything is clean, reply HEARTBEAT_OK.",
-        "timeoutSeconds": 120
-      },
-      "delivery": {
-        "mode": "announce",
-        "channel": "last"
-      },
-      "state": {
-        "nextRunAtMs": 1772370000000,
-        "lastRunAtMs": 1772197200029,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "lastDurationMs": 12426,
+        "lastDurationMs": 13515,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -111,7 +42,7 @@
       "description": "Check trading service status and daily P&L",
       "enabled": true,
       "createdAtMs": 1772332154669,
-      "updatedAtMs": 1772368275887,
+      "updatedAtMs": 1772397221624,
       "schedule": {
         "kind": "every",
         "everyMs": 3600000,
@@ -128,83 +59,14 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772371875887,
-        "lastRunAtMs": 1772368258216,
+        "nextRunAtMs": 1772400821624,
+        "lastRunAtMs": 1772397206331,
         "lastRunStatus": "error",
         "lastStatus": "error",
-        "lastDurationMs": 17671,
+        "lastDurationMs": 15293,
         "lastDeliveryStatus": "unknown",
-        "consecutiveErrors": 10,
+        "consecutiveErrors": 18,
         "lastError": "No delivery target resolved for channel \"slack\". Set delivery.to."
-      }
-    },
-    {
-      "id": "0a2225e2-e466-45e2-979d-c47d178eefa1",
-      "agentId": "hermes",
-      "name": "Daily Blog Post — European Therapeutics",
-      "enabled": true,
-      "createdAtMs": 1771529419254,
-      "updatedAtMs": 1772290011649,
-      "schedule": {
-        "kind": "cron",
-        "expr": "45 9 * * *",
-        "tz": "America/New_York"
-      },
-      "sessionTarget": "isolated",
-      "wakeMode": "now",
-      "payload": {
-        "kind": "agentTurn",
-        "model": "anthropic/claude-sonnet-4-5",
-        "message": "DAILY BLOG POST — European Therapeutics (Carmen's massage business)\n\nYou are generating today's blog post for blog.lmt4life.com.\n\n**STEP 1: Pick today's topic**\nRead C:\\Users\\chris\\.openclaw\\workspace\\massage-blogger\\CONTENT-CALENDAR.md and find today's scheduled post. If today doesn't have one scheduled, pick the NEXT unwritten post from the calendar. If the calendar is exhausted, pick a topic from BLOG-STRATEGY.md content pillars that hasn't been covered yet (check published-topics.json for what's already done).\n\n**STEP 2: Check for duplicates**\nRead C:\\Users\\chris\\.openclaw\\workspace\\massage-blogger\\published-topics.json. Make sure you're not duplicating an existing topic.\n\n**STEP 3: Generate the post**\nRun: python C:\\Users\\chris\\.openclaw\\workspace\\tony-tools\\tools\\content\\blog.py \"[TOPIC]\" --tags \"[APPROPRIATE TAGS]\"\nThe script uses Ollama/Qwen3 30B on 192.168.4.51:11434 to generate, then commits and pushes to GitHub (auto-deploys via Cloudflare Pages).\n\nIf Ollama is down or the script fails, report the error to Slack channel C0AF6B4FVMZ via message tool (action=send, channel=slack, target=C0AF6B4FVMZ) and stop.\n\n**STEP 4: Update tracking**\nRead the published-topics.json file, add the new post entry (date, slug, title, keyword, pillar), and write it back.\n\n**STEP 5: Report**\nSend a brief confirmation to Slack channel C0AF6B4FVMZ via message tool (action=send, channel=slack, target=C0AF6B4FVMZ) with: post title, target keyword, and link.\n\nIf everything works, reply NO_REPLY after sending the Slack message.",
-        "timeoutSeconds": 600
-      },
-      "delivery": {
-        "mode": "none"
-      },
-      "state": {
-        "lastRunAtMs": 1772289900029,
-        "lastStatus": "ok",
-        "lastDurationMs": 111620,
-        "nextRunAtMs": 1772376300000,
-        "lastRunStatus": "ok",
-        "lastDelivered": false,
-        "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0
-      }
-    },
-    {
-      "id": "67bb83ba-0ab1-4fba-a215-af26a67e178a",
-      "name": "palmtech-warmup",
-      "description": "Send 5 daily warmup emails from tony@palmtechweb.com",
-      "enabled": true,
-      "createdAtMs": 1772072459411,
-      "updatedAtMs": 1772290810694,
-      "schedule": {
-        "kind": "cron",
-        "expr": "0 10 * * *",
-        "tz": "America/New_York"
-      },
-      "sessionTarget": "isolated",
-      "wakeMode": "now",
-      "payload": {
-        "kind": "agentTurn",
-        "message": "Run this command: python C:/Users/chris/.openclaw/workspace/local-web-biz/scripts/warmup-cron.py — report the results. If all 5 sent OK, reply HEARTBEAT_OK. If any failed, report failures.",
-        "model": "sonnet",
-        "timeoutSeconds": 60
-      },
-      "delivery": {
-        "mode": "none",
-        "channel": "last"
-      },
-      "state": {
-        "nextRunAtMs": 1772377200000,
-        "lastRunAtMs": 1772290800012,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "lastDurationMs": 10682,
-        "lastDelivered": false,
-        "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0
       }
     },
     {
@@ -327,6 +189,113 @@
         "lastRunStatus": "ok",
         "lastStatus": "ok",
         "lastDurationMs": 42333,
+        "lastDelivered": true,
+        "lastDeliveryStatus": "delivered",
+        "consecutiveErrors": 0
+      }
+    },
+    {
+      "id": "1d71f207-ab77-46a3-a882-e98a33e6f4b9",
+      "agentId": "hermes",
+      "name": "Daily Blog Post — European Therapeutics",
+      "enabled": true,
+      "createdAtMs": 1772387686689,
+      "updatedAtMs": 1772387952207,
+      "schedule": {
+        "kind": "cron",
+        "expr": "45 9 * * *",
+        "tz": "America/New_York"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "DAILY BLOG POST — European Therapeutics (Carmen's massage business)\n\nYou are generating today's blog post for blog.lmt4life.com.\n\n**STEP 1: Pick today's topic**\nRead C:\\Users\\chris\\.openclaw\\workspace\\massage-blogger\\CONTENT-CALENDAR.md and find today's scheduled post. If today doesn't have one scheduled, pick the NEXT unwritten post from the calendar. If the calendar is exhausted, pick a topic from BLOG-STRATEGY.md content pillars that hasn't been covered yet (check published-topics.json for what's already done).\n\n**STEP 2: Check for duplicates**\nRead C:\\Users\\chris\\.openclaw\\workspace\\massage-blogger\\published-topics.json. Make sure you're not duplicating an existing topic.\n\n**STEP 3: Generate the post**\nRun: python C:\\Users\\chris\\.openclaw\\workspace\\tony-tools\\tools\\content\\blog.py \"[TOPIC]\" --tags \"[APPROPRIATE TAGS]\"\nThe script uses Ollama/Qwen3 30B on 192.168.4.51:11434 to generate, then commits and pushes to GitHub (auto-deploys via Cloudflare Pages).\n\nIf Ollama is down or the script fails, report the error in your response and stop.\n\n**STEP 4: Update tracking**\nRead the published-topics.json file, add the new post entry (date, slug, title, keyword, pillar), and write it back.\n\n**STEP 5: Report**\nReply with a brief summary: post title, target keyword, and link to the new post.",
+        "model": "anthropic/claude-sonnet-4-5",
+        "timeoutSeconds": 600
+      },
+      "delivery": {
+        "mode": "none",
+        "channel": "slack",
+        "to": "channel:C0AF6B4FVMZ"
+      },
+      "state": {
+        "nextRunAtMs": 1772462700000,
+        "lastRunAtMs": 1772387793053,
+        "lastRunStatus": "error",
+        "lastStatus": "error",
+        "lastDurationMs": 119816,
+        "lastError": "cron announce delivery failed",
+        "lastDeliveryStatus": "unknown",
+        "consecutiveErrors": 1
+      }
+    },
+    {
+      "id": "67bb83ba-0ab1-4fba-a215-af26a67e178a",
+      "name": "palmtech-warmup",
+      "description": "Send 5 daily warmup emails from tony@palmtechweb.com",
+      "enabled": true,
+      "createdAtMs": 1772072459411,
+      "updatedAtMs": 1772377221445,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 10 * * *",
+        "tz": "America/New_York"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Run this command: python C:/Users/chris/.openclaw/workspace/local-web-biz/scripts/warmup-cron.py — report the results. If all 5 sent OK, reply HEARTBEAT_OK. If any failed, report failures.",
+        "model": "sonnet",
+        "timeoutSeconds": 60
+      },
+      "delivery": {
+        "mode": "none",
+        "channel": "last"
+      },
+      "state": {
+        "nextRunAtMs": 1772463600000,
+        "lastRunAtMs": 1772377200019,
+        "lastRunStatus": "error",
+        "lastStatus": "error",
+        "lastDurationMs": 21426,
+        "lastDelivered": false,
+        "lastDeliveryStatus": "not-delivered",
+        "consecutiveErrors": 1,
+        "lastError": "⚠️ 📱 Nodes: `with command python, C:/Users/chris/.openclaw/workspace/local-web-biz/scripts/warmup-cron.py, node host` failed",
+        "lastDeliveryError": "⚠️ 📱 Nodes: `with command python, C:/Users/chris/.openclaw/workspace/local-web-biz/scripts/warmup-cron.py, node host` failed"
+      }
+    },
+    {
+      "id": "b9621ce1-71d7-4038-8d08-c62586ab0dae",
+      "agentId": "tony",
+      "name": "healthcheck:security-audit",
+      "enabled": true,
+      "createdAtMs": 1771947877103,
+      "updatedAtMs": 1772370051519,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 8 */2 * *",
+        "tz": "America/New_York"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Run a security audit: execute 'openclaw security audit --deep' and check for any new listening ports on 0.0.0.0. Post findings to #engineering channel. If everything is clean, reply HEARTBEAT_OK.",
+        "timeoutSeconds": 120
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "last"
+      },
+      "state": {
+        "nextRunAtMs": 1772542800000,
+        "lastRunAtMs": 1772370000015,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "lastDurationMs": 51504,
         "lastDelivered": true,
         "lastDeliveryStatus": "delivered",
         "consecutiveErrors": 0

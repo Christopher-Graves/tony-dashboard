@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+﻿import { NextResponse } from 'next/server';
 import { readFileSync, existsSync, statSync } from 'fs';
 import { join } from 'path';
 import { homedir } from 'os';
@@ -99,7 +99,11 @@ function buildAgentFromDir(agentId: string, configAgent?: any): Agent {
 }
 
 function buildAgentList(): Agent[] {
-  const configData = readFileSync(OPENCLAW_CONFIG_PATH, 'utf-8');
+  let configData = readFileSync(OPENCLAW_CONFIG_PATH, 'utf-8');
+  // Strip BOM if present (fixes parsing openclaw.json)
+  if (configData.charCodeAt(0) === 0xFEFF) {
+    configData = configData.slice(1);
+  }
   const config = JSON.parse(configData);
 
   // Build a map of config agents for quick lookup
