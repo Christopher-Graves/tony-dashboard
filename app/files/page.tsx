@@ -183,7 +183,7 @@ export default function FilesPage() {
     setFileLoading(true);
     setSaveStatus(null);
     try {
-      const data = await api.get(`/api/files`, { agent: selectedAgent, path: entry.path });
+      const data = await api.get(`/api/files`, { agent: selectedAgent || '', path: entry.path });
       if (data.error) {
         setFileContent(`Error: ${data.error}`);
       } else {
@@ -380,3 +380,4 @@ export default function FilesPage() {
     </div>
   );
 }
+

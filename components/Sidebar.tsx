@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -23,6 +23,7 @@ import {
   Menu,
   X,
   Wallet,
+  Mic,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -32,6 +33,7 @@ const navigation = [
   { name: 'Chat', href: '/chat', icon: MessageSquare },
   { name: 'Memory', href: '/memory', icon: Brain },
   { name: 'Finance', href: '/finance', icon: Wallet },
+  { name: 'Audio', href: '/audio', icon: Mic },
   { name: 'Cron Jobs', href: '/crons', icon: Clock },
   { name: 'Calendar', href: '/calendar', icon: CalendarDays },
   { name: 'Reminders', href: '/reminders', icon: Bell },
@@ -52,7 +54,6 @@ export function Sidebar() {
 
   return (
     <>
-      {/* Mobile hamburger button */}
       <button
         onClick={() => setMobileOpen(!mobileOpen)}
         className="md:hidden fixed top-4 left-4 z-50 flex h-10 w-10 items-center justify-center rounded-lg bg-card border border-border text-foreground"
@@ -60,7 +61,6 @@ export function Sidebar() {
         {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
       </button>
 
-      {/* Mobile overlay */}
       {mobileOpen && (
         <div
           className="md:hidden fixed inset-0 z-30 bg-black/60 backdrop-blur-sm"
@@ -68,7 +68,6 @@ export function Sidebar() {
         />
       )}
 
-      {/* Sidebar */}
       <div
         className={cn(
           'flex h-full flex-col gap-4 border-r border-border bg-card py-4 transition-transform duration-300 md:translate-x-0',

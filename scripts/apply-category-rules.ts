@@ -1,4 +1,4 @@
-﻿import { Pool } from 'pg';
+import { Pool } from 'pg';
 
 const pool = new Pool({
   host: process.env.DB_HOST || 'localhost',
@@ -32,13 +32,13 @@ async function applyCategoryRules() {
           AND (merchant_name ILIKE $2 OR name ILIKE $2)
       `, [rule.category_id, `%${rule.merchant_pattern}%`]);
 
-      if (result.rowCount > 0) {
-        console.log(`✓ Rule "${rule.merchant_pattern}" → category ${rule.category_id}: ${result.rowCount} transactions updated`);
-        totalUpdated += result.rowCount;
+      if (result.rowCount !== null && result.rowCount > 0) {
+        console.log(`? Rule "${rule.merchant_pattern}" ? category ${rule.category_id}: ${result.rowCount} transactions updated`);
+        totalUpdated += result.rowCount || 0;
       }
     }
 
-    console.log(`\n✅ Auto-categorization complete! ${totalUpdated} transactions updated.\n`);
+    console.log(`\n? Auto-categorization complete! ${totalUpdated} transactions updated.\n`);
 
     // Show summary of remaining uncategorized
     const uncategorizedResult = await pool.query(`
@@ -48,7 +48,7 @@ async function applyCategoryRules() {
         OR category_id = (SELECT id FROM categories WHERE name = 'Other' LIMIT 1)
     `);
 
-    console.log(`📊 Remaining uncategorized transactions: ${uncategorizedResult.rows[0].count}\n`);
+    console.log(`?? Remaining uncategorized transactions: ${uncategorizedResult.rows[0].count}\n`);
 
   } catch (error) {
     console.error('Error applying category rules:', error);
@@ -59,3 +59,5 @@ async function applyCategoryRules() {
 }
 
 applyCategoryRules();
+
+
