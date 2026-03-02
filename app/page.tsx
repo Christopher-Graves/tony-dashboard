@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useEffect, useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -116,19 +116,19 @@ export default function HomePage() {
     <div className="p-4 md:p-6 lg:p-8">
       {/* Gateway Status */}
       <div className="mb-6 md:mb-8">
-        <Card className={order-2 ${
+        <Card className={`border-2 ${
           gateway?.status === 'running' ? 'border-emerald-500/30' :
           gateway?.status === 'stopped' ? 'border-red-500/30' :
           'border-yellow-500/30'
-        }}>
+        }`}>
           <CardHeader className="pb-3">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div className={h-3 w-3 rounded-full ${
+                <div className={`h-3 w-3 rounded-full ${
                   gateway?.status === 'running' ? 'bg-emerald-500 animate-pulse' :
                   gateway?.status === 'stopped' ? 'bg-red-500' :
                   'bg-yellow-500'
-                }} />
+                }`} />
                 <CardTitle className="text-lg sm:text-xl">Gateway Status</CardTitle>
                 {!gwLoading && gateway && (
                   <Badge variant={gateway.status === 'running' ? 'default' : 'destructive'}
@@ -141,18 +141,18 @@ export default function HomePage() {
                 <button
                   onClick={fetchGateway}
                   className="rounded-md px-2 sm:px-3 py-1.5 text-xs sm:text-sm border border-border hover:bg-accent transition-colors"
-                  title=\"Refresh status\"
+                  title="Refresh status"
                 >
                   ↻ <span className="hidden sm:inline">Refresh</span>
                 </button>
                 <button
                   onClick={restartGateway}
                   disabled={restarting}
-                  className={ounded-md px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-medium transition-colors ${
+                  className={`rounded-md px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-medium transition-colors ${
                     restarting
                       ? 'bg-muted text-muted-foreground cursor-not-allowed'
                       : 'bg-orange-600 hover:bg-orange-700 text-white'
-                  }}
+                  }`}
                 >
                   {restarting ? '⏳ <span className="hidden sm:inline">Restarting...</span>' : '⟳ <span className="hidden sm:inline">Restart Gateway</span>'}
                 </button>
